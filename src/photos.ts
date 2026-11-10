@@ -9,6 +9,8 @@ export const MAX_PHOTOS = 20;
 // На диску (і в Telegram) — 1024 px; моделі — 768 px: ~490 токенів на фото замість ~870
 const MAX_SIDE = 1024;
 const MODEL_SIDE = 768;
+// Стеля розміру вхідного фото для sharp (типова — 268 Мп): фото з телефона — до ~50 Мп, більше — аномалія
+const MAX_INPUT_PIXELS = 60_000_000;
 
 export function photoDir(dataDir: string, source: string, id: string) {
   return join(dataDir, 'photos', `${source}-${id}`);
@@ -25,7 +27,7 @@ export async function downloadPhotos(urls: string[], dir: string): Promise<strin
   for (const [i, url] of urls.slice(0, MAX_PHOTOS).entries()) {
     const name = `${String(i + 1).padStart(2, '0')}.jpg`;
     try {
-      const jpeg = await sharp(await fetchBuffer(url))
+      const jpeg = await sharp(await fetchBuffer(url), { limitInputPixels: MAX_INPUT_PIXELS })
         .rotate()
         .resize(MAX_SIDE, MAX_SIDE, { fit: 'inside', withoutEnlargement: true })
         .jpeg({ quality: 82 })
@@ -41,7 +43,7 @@ export async function downloadPhotos(urls: string[], dir: string): Promise<strin
 
 /** Фото для моделі: зменшене до 768 px, JPEG у base64. */
 export async function encodeForModel(path: string): Promise<string> {
-  const jpeg = await sharp(path)
+  const jpeg = await sharp(path, { limitInputPixels: MAX_INPUT_PIXELS })
     .resize(MODEL_SIDE, MODEL_SIDE, { fit: 'inside', withoutEnlargement: true })
     .jpeg({ quality: 80 })
     .toBuffer();

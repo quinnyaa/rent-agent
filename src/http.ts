@@ -47,7 +47,9 @@ export function assertAllowedUrl(url: string): void {
   }
   const host = parsed.hostname.toLowerCase();
   const allowed = ALLOWED_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`));
-  if (parsed.protocol !== 'https:' || !allowed) throw new BlockedError(`адреса поза дозволеними сайтами: ${url}`);
+  // Нестандартний порт і логін у адресі звичайним посиланням сайту не потрібні
+  const plain = parsed.port === '' && parsed.username === '' && parsed.password === '';
+  if (parsed.protocol !== 'https:' || !allowed || !plain) throw new BlockedError(`адреса поза дозволеними сайтами: ${url}`);
 }
 
 /** GET із ручним проходом редиректів: кожна адреса в ланцюжку перевіряється до запиту. */
