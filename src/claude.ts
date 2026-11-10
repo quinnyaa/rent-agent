@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import type { z } from 'zod';
+import { envInt } from './env.ts';
 
 /** Ліміт підписки вичерпано — далі в цьому запуску Claude не викликаємо. */
 export class ClaudeLimitError extends Error {}
@@ -28,7 +29,7 @@ export interface ClaudeOptions {
   log?: (msg: string) => void;
 }
 
-const MAX_PARALLEL = Math.max(1, Number(process.env.CLAUDE_PARALLEL ?? 4));
+const MAX_PARALLEL = envInt('CLAUDE_PARALLEL', 4, 1, 16);
 let running = 0;
 const waiting: (() => void)[] = [];
 let limitHit: string | null = null;

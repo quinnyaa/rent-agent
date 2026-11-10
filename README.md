@@ -17,7 +17,13 @@ against your own requirements, and sends the ones that fit to Telegram.
 
 > **Disclaimer.** This is a personal tool, not affiliated with bazos.sk. It reads public search pages the way a browser
 > would. Use it only for your own apartment search, don't increase the request rate, and respect the site's terms.
-> Everything it collects (database, photos, shortlist) stays on your machine.
+> Everything it collects (database, photos, shortlist) is stored on your machine.
+
+> **What leaves your machine.** The files are stored locally, but the analysis is not offline: the text and photos of
+> every analyzed listing, together with your `criteria.md`, are sent to Anthropic through the Claude Code CLI (under
+> your subscription's data settings), and matching listings (text summary, link, photos) are sent to your Telegram
+> chat. `--dry-run` only skips Telegram — it still fetches pages and calls Claude. Nothing else is sent anywhere.
+> To wipe the local data, delete the `data/` folder and `shortlist.md`.
 
 ## Contents
 

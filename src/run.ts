@@ -9,6 +9,7 @@ import { getCity } from './cities.ts';
 import { ClaudeAuthError, ClaudeLimitError, claudeAuthFailed, claudeLimitHit, claudeSucceeded } from './claude.ts';
 import { AUTH_HINT, describeProblem, problemLines } from './problems.ts';
 import { Db, type ListingRow } from './db.ts';
+import { envInt, intSetting } from './env.ts';
 import { HttpError } from './http.ts';
 import { acquireLock } from './lock.ts';
 import { downloadPhotos, listPhotos, MAX_PHOTOS, photoDir } from './photos.ts';import { appendShortlist } from './shortlist.ts';
@@ -50,13 +51,18 @@ const RECHECK = new Set((args.recheck ?? '').split(',').map((s) => s.trim()).fil
  * перевіряється окремо (isAlive); ті, чия сторінка не відкривається, видаляються з БД разом із фото.
  */
 const SYNC = args.sync!;
-const LIMIT = args.limit ? Number(args.limit) : Infinity;
+// Хибний --limit — зупинка, а не «без ліміту»: інакше одруківка запускає обробку всієї черги
+const LIMIT = args.limit === undefined ? Infinity : intSetting('--limit', args.limit, NaN, 0, Number.MAX_SAFE_INTEGER);
+if (Number.isNaN(LIMIT)) {
+  console.error('--limit має бути цілим числом ≥ 0');
+  process.exit(2);
+}
 const MODEL = args.model ?? process.env.CLAUDE_MODEL ?? 'haiku';
 /** Місто пошуку: фільтр bazos, {{city}} у промптах, listings.city. Топ і досилання — лише в межах міста. */
 const CITY = getCity(args.city ?? process.env.CITY);
-const PHOTO_SCORE_MIN = Number(process.env.PHOTO_SCORE_MIN ?? 5);
-const FIRST_RUN_LIMIT = Number(process.env.FIRST_RUN_LIMIT ?? 40);
-const HEARTBEAT_HOUR = Number(process.env.HEARTBEAT_HOUR ?? 20);
+const PHOTO_SCORE_MIN = envInt('PHOTO_SCORE_MIN', 5, 1, 10);
+const FIRST_RUN_LIMIT = envInt('FIRST_RUN_LIMIT', 40, 0, 100_000);
+const HEARTBEAT_HOUR = envInt('HEARTBEAT_HOUR', 20, 0, 23);
 const TOP_N = 10;
 /** Скільки ключів пам'ятати в meta.top:seen (найстаріші витісняються). */
 const TOP_SEEN_MAX = 2000;

@@ -34,7 +34,8 @@ src/sources/index.ts    реєстр джерел — нове джерело д
 src/analyze/index.ts    analyzeText / analyzePhotos: підставляє criteria.md і дані в шаблони prompts/*.md
 src/analyze/schemas.ts  zod-схеми TextResult / PhotoResult (те, що повертає модель і зберігається в БД як JSON)
 src/claude.ts           spawn `claude -p`: семафор CLAUDE_PARALLEL, детект ліміту, extractJson, askJson (1 повтор при невалідному JSON)
-src/http.ts             ВСІ запити до сайтів через одну послідовну чергу з паузами (сторінки 2–5 с, фото 0.5–1 с), 1 повтор
+src/http.ts             ВСІ запити до сайтів через одну послідовну чергу з паузами (сторінки 2–5 с, фото 0.5–1 с), 1 повтор; лише https і домени з ALLOWED_DOMAINS, стеля розміру відповіді
+src/env.ts              intSetting / envInt: цілі числа з env і аргументів у межах, сміття → типове значення з попередженням
 src/db.ts               SQLite: таблиці listings, runs, meta; статуси й переходи
 src/photos.ts           усі фото (до 20) → data/photos/<source>-<id>/01.jpg… (1024 px, для Telegram); encodeForModel → 768 px base64
 src/telegram.ts         TelegramNotifier / ConsoleNotifier, buildCaption (≤1024 симв.: блок фактів factLines + плюси/мінуси), pickPhotos, rankTop, formatTop
@@ -53,6 +54,7 @@ scripts/run.sh          обгортка для launchd: PATH, лог у data/lo
 scripts/schedule.sh     керування launchd-агентом com.rentagent.poprad (install/enable/disable/status/run-now); `sync` — run.sh --sync у фоні, повз launchd
 scripts/claude-login.sh `claude auth login` для кнопки «Увійти в Claude…» у плагіні
 scripts/swiftbar/       плагін рядка меню; читає data/rent.db, data/run.lock і логи
+.github/                CI (typecheck, тести, npm audit на push/PR) і Dependabot
 docs/source-bazos.md    опис розмітки bazos (селектори, URL, пагінація) — звіряти при поломці парсера
 docs/prompts/           ТЗ-промпти, якими будувалися частини проєкту (історія, не інструкції)
 fixtures/               збережений HTML bazos для тестів парсера (імена продавців/телефони замінено заглушками — так само робити з новими)
@@ -93,6 +95,10 @@ data/                   (gitignored) rent.db, photos/, logs/, run.lock
   `Runner.problems` їх групує, підсумок у Telegram показує «• причина: N»; ті самі рядки йдуть у `runs.error` (плагін).
   Нове місце, де оголошення лишається `pending_analysis`, має викликати `this.problem(...)`.
 - **Ввічливість до сайту:** жодних прямих `fetch` до сайтів повз `http.ts`; запити строго послідовні.
+- **Тільки сайти джерел:** `http.ts` ходить лише по HTTPS на домени з `ALLOWED_DOMAINS` (редиректи проходить вручну й
+  перевіряє кожну адресу), відповідь обмежена за розміром; порушення — `BlockedError` без повтору. Нове джерело —
+  додати домен туди. Числові env читати через `envInt` (`src/env.ts`), не `Number(process.env…)`: NaN мовчки вимикає ліміти.
+- `prompts/system.md` каже моделі, що текст і фото оголошення — недовірені дані, не інструкції; не прибирати.
 - Виклик `claude`: `--input-format stream-json --output-format stream-json --verbose` (з виводу береться рядок
   `type: result`), `--tools ''`, `--strict-mcp-config`, `--no-session-persistence`, `--permission-mode dontAsk`,
   власний `--system-prompt`. Фото (768 px, base64) ідуть у тому ж повідомленні перед текстом — один хід, без Read
