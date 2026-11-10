@@ -1,5 +1,5 @@
 import { ClaudeAuthError, ClaudeLimitError } from './claude.ts';
-import { HttpError } from './http.ts';
+import { BlockedError, HttpError } from './http.ts';
 
 /** Що робити, коли CLI не авторизований — один текст для підсумку, алерта і логу. */
 export const AUTH_HINT = 'Claude не авторизований — виконай на Mac: claude auth login';
@@ -22,6 +22,7 @@ export function describeProblem(stage: 'сторінка' | 'текст' | 'фо
       if (err.status >= 500) return `bazos недоступний (HTTP ${err.status})`;
       return `bazos: HTTP ${err.status}`;
     }
+    if (err instanceof BlockedError) return 'bazos: адреса поза сайтом або завелика відповідь';
     if (NETWORK_RE.test(message) || /timeout|aborted/i.test(message)) return 'немає зв’язку з bazos (мережа/тайм-аут)';
     return `сторінка не розпарсилась: ${short(message)}`;
   }
