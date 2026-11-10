@@ -51,7 +51,12 @@ const RECHECK = new Set((args.recheck ?? '').split(',').map((s) => s.trim()).fil
  * перевіряється окремо (isAlive); ті, чия сторінка не відкривається, видаляються з БД разом із фото.
  */
 const SYNC = args.sync!;
-const LIMIT = intSetting('--limit', args.limit, Infinity, 0, Number.MAX_SAFE_INTEGER);
+// Хибний --limit — зупинка, а не «без ліміту»: інакше одруківка запускає обробку всієї черги
+const LIMIT = args.limit === undefined ? Infinity : intSetting('--limit', args.limit, NaN, 0, Number.MAX_SAFE_INTEGER);
+if (Number.isNaN(LIMIT)) {
+  console.error('--limit має бути цілим числом ≥ 0');
+  process.exit(2);
+}
 const MODEL = args.model ?? process.env.CLAUDE_MODEL ?? 'haiku';
 /** Місто пошуку: фільтр bazos, {{city}} у промптах, listings.city. Топ і досилання — лише в межах міста. */
 const CITY = getCity(args.city ?? process.env.CITY);

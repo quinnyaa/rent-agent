@@ -3,10 +3,10 @@
  * попередження і типове: NaN у порівняннях мовчки вимикає ліміти (семафор Claude, поріг оцінки фото).
  */
 export function intSetting(name: string, raw: string | undefined, fallback: number, min: number, max: number): number {
-  if (raw === undefined || raw.trim() === '') return fallback;
-  const value = Number(raw);
+  if (raw === undefined || (raw.trim() === '' && !Number.isNaN(fallback))) return fallback;
+  const value = raw.trim() === '' ? NaN : Number(raw);
   if (Number.isInteger(value) && value >= min && value <= max) return value;
-  console.warn(`${name}=${JSON.stringify(raw)} — очікується ціле число від ${min} до ${max}; беру ${fallback}`);
+  console.warn(`${name}=${JSON.stringify(raw)} — очікується ціле число від ${min} до ${max}${Number.isNaN(fallback) ? '' : `; беру ${fallback}`}`);
   return fallback;
 }
 
