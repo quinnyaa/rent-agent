@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<title>Byty na prenájom  - Poprad 1 inzercia - Reality - strana 8 | Bazoš.sk</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="description" content="Kategória Byty na prenájom  - Poprad 1 inzercia. Vyberajte z 152 inzerátov. Predaj ľahko a rýchlo na Bazoš.sk. Cez 400 tisíc užívateľov za deň - strana 8."><meta property="og:title" content="Byty na prenájom  - Poprad 1 inzercia - Reality">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bazos.sk">
+<meta property="og:description" content="Kategória Byty na prenájom  - Poprad 1 inzercia. Vyberajte z 152 inzerátov. Predaj ľahko a rýchlo na Bazoš.sk. Cez 400 tisíc užívateľov za deň - strana 8.">
+<link rel="canonical" href="https://reality.bazos.sk/prenajmu/byt/140/?hledat=&hlokalita=05801&humkreis=5&cenaod=&cenado=700&order="><meta property="fb:admins" content="1055875657">
+<meta name="ROBOTS" content="NOINDEX">
+<link rel="stylesheet" href="https://www.bazos.sk/bazos68s.css" type="text/css"><link rel="preload" as="image" href="https://www.bazos.sk/obrazky/bazos.svg">
+<link rel="stylesheet" href="https://www.bazos.sk/bazosprint.css" type="text/css" media="print">
+<link rel="icon" href="https://www.bazos.sk/favicon.svg" type="image/svg+xml">
+<link rel="icon" HREF="https://www.bazos.sk/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="https://www.bazos.sk/apple-touch-icon.png">
+
+<script async="async" src="https://www.google.com/adsense/search/ads.js"></script>
+<script type="text/javascript" charset="utf-8">
+(function(g,o){g[o]=g[o]||function(){(g[o]['q']=g[o]['q']||[]).push(
+  arguments)},g[o]['t']=1*new Date})(window,'_googCsa');
+</script><script>
+var xhr = new XMLHttpRequest();
+var naseptavac_value = '';
+function naseptavac(value) {
+  if (value=='')  {
+  	naseptavac_value = '';
+  	document.getElementById('vysledek').innerHTML='';
+  	}
+else {
+	if (naseptavac_value == value) {
+		return false;
+	}
+	naseptavac_value = value;
+	setTimeout(function () {
+		if (naseptavac_value != value) {
+			return false;
+		}
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4 && naseptavac_value == value){
+				document.getElementById('vysledek').innerHTML = this.responseText;
+			}
+ 		 };
+		xhr.open("POST", '/suggest.php');
+		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhr.send('rubnas=RE&catnas=152&qnas='+encodeURIComponent(naseptavac_value));
+	}, 250);
+}
+}
+
+var naseptavacpsc_value = '';
+function naseptavacpsc(value) {
+  if (value=='')  {
+  	naseptavacpsc_value = '';
+  	document.getElementById('vysledekpsc').innerHTML='<table cellpadding=\"3\" cellspacing=\"0\" class=\"tablenaspsc\"><tr><td class=\"act\" onclick=\"getLocation();\"><b>Inzeráty v okolí</b></td></tr></table>';
+  	}
+else {
+	if (naseptavacpsc_value == value) {
+		return false;
+	}
+	naseptavacpsc_value = value;
+	setTimeout(function () {
+		if (naseptavacpsc_value != value) {
+			return false;
+		}
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4 && naseptavacpsc_value == value){
+				document.getElementById('vysledekpsc').innerHTML = this.responseText;
+			}
+ 		 };
+		xhr.open("POST", '/suggestpsc.php');
+		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhr.send('qnaspsc='+encodeURIComponent(naseptavacpsc_value));
+	}, 250);
+}
+}
+
+function getLocation() {
+if (navigator.geolocation) {navigator.geolocation.getCurrentPosition(showPosition);}
+else {document.getElementById('hlokalita').value = '';}
+}
+function showPosition(position) {
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4){
+				document.getElementById('hlokalita').value = this.responseText;
+				document.forms['formt'].submit();
+			}
+ 		 };
+		xhr.open("POST", '/zip.php');
+		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhr.send('latitude='+encodeURIComponent(position.coords.latitude)+'&longitude='+encodeURIComponent(position.coords.longitude));
+}
+
+var agent_value = '';
+function agentclick() {
+  if (document.getElementById('agentmail').value=='')  {
+  	document.getElementById("agentmail").focus();
+    return false;
+  	}
+else {
+agent_value = document.getElementById('agentmail').value;
+xhr.onreadystatechange = function() {
+  if (this.readyState == 4){
+				document.getElementById('overlay').innerHTML = this.responseText;
+			}
+  };
+xhr.open("POST", '/agent.php');
+xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+xhr.send('hledat=&rubrikav=RE&hlokalita=05801&humkreis=5&cenaod=&cenado=700&cat=152&typ=3&agentmail='+encodeURIComponent(agent_value));
+}
+}
+
+function odeslatrequest(value,params) {
+xhr.onreadystatechange = function() {
+  if (this.readyState == 4){
+				document.getElementById('overlay').innerHTML = this.responseText;
+			}
+  };
+xhr.open("POST", value);
+xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+xhr.send(params);
+}
+function overlay() {
+	el = document.getElementById("overlay");
+	el.style.display = (el.style.display == "inline") ? "none" : "inline";
+}
+function odeslatakci(postaction,value1,value2,value3) {
+document.getElementById('postaction').value = postaction;
+document.getElementById("postv1").value = value1;
+document.getElementById("postv2").value = value2;
+document.getElementById("postv3").value = value3;
+document.formaction.submit();
+}
+</script>
+</head>
+
+<body>
+
+<div class="sirka">
+
+
+<div class="listalogor">
+<div class="listalogol"><a href="https://www.bazos.sk/" title="Bazos.sk - Inzercia, inzeráty"><img src="https://www.bazos.sk/obrazky/bazos.svg" width="199" height="34" alt="Bazos.sk - Inzercia, inzeráty"></a></div>
+<div class="listalogom"><b>... inzercia pre každého</b></div>
+<div class="listalogop"><a href="https://www.bazos.sk/oblubene.php"><b>Obľúbené inzeráty</b></a> <a href="https://www.bazos.sk/moje-inzeraty.php"><b>Moje inzeráty</b></a> <a href="/pridat-inzerat.php"><b><span class=pridati>Pridať inzerát</span></b></a></div>
+</div>
+<form name="formt" id="formt" method=get >
+<div class="listah">
+<div class="rubriky">
+<b>
+Čo: <span class=vysokoli><span id="vysledek"></span><input type="search" onkeyup="naseptavac(this.value);" id=hledat name=hledat size="17" maxlength="256" value="" autocomplete="off" title="Čo? Hľadaný výraz"></span>
+
+<select name="rubriky" onchange='this.form.submit();' title="Vyber rubriku">
+<option value="www">Všetky rubriky</option>
+<option value="auto">Auto</option><option value="deti">Deti</option><option value="dom">Dom a záhrada</option><option value="elektro">Elektro</option><option value="foto">Foto</option><option value="hudba">Hudba</option><option value="knihy">Knihy</option><option value="mobil">Mobily</option><option value="motocykle">Motocykle</option><option value="nabytok">Nábytok</option><option value="oblecenie">Oblečenie</option><option value="pc">PC</option><option value="praca">Práca</option><option value="reality" selected>Reality</option><option value="sluzby">Služby</option><option value="stroje">Stroje</option><option value="sport">Šport</option><option value="vstupenky">Vstupenky</option><option value="zvierata">Zvieratá</option><option value="ostatne">Ostatné</option></select>
+
+PSČ (miesto): <span class=vysokolipsc><span id="vysledekpsc"></span><input type="search" name="hlokalita" id="hlokalita" onkeyup="naseptavacpsc(this.value);" onclick="naseptavacpsc(this.value);" value="05801" size="5" maxlength="25" autocomplete="off" title="Kde? PSČ (miesto)" style="-webkit-appearance: none;"></span>
+Okolie: <input name="humkreis" title="Okolie v km" value="5" size="3" style="width: 25px;"> km
+Cena od: <input name=cenaod title="Cena od €" maxlength="12" size="4" value=""> - do: <input name=cenado title="Cena do €" maxlength="12" size="4" value="700"> €  <input type="submit" name="Submit" value="Hľadať">
+<input type="hidden" name="order" id="order"><input type="hidden" name="crp" id="crp"><input type="hidden" id="kitx" name="kitx" value="ano"></b>
+</div>
+</div>
+</form>
+<div class="drobky"><a href=https://www.bazos.sk/>Hlavná stránka</a>  > <a href="https://reality.bazos.sk">Reality</a> > <a href="https://reality.bazos.sk/prenajmu/">Prenájom</a> > <h1 class="nadpiskategorie">Byty</h1> > <b>Poprad - Poprad 1</b></div>
+<br>
+
+
+<div class="flexmain"><div class="menuleft"><div class="nadpismenu"><a href="/predam/" onclick="document.getElementById('formt').action = '/predam/';document.forms['formt'].submit();return false;">Predaj</a></div>
+<div class="barvalmenu">
+<div class="barvaleva">
+<a href="/predam/byt/" onclick="document.getElementById('formt').action = '/predam/byt/';document.forms['formt'].submit();return false;">Byty</a>
+<a href="/predam/dom/" onclick="document.getElementById('formt').action = '/predam/dom/';document.forms['formt'].submit();return false;">Domy</a>
+<a href="/predam/projekty/" onclick="document.getElementById('formt').action = '/predam/projekty/';document.forms['formt'].submit();return false;">Nové projekty</a>
+<a href="/predam/garaz/" onclick="document.getElementById('formt').action = '/predam/garaz/';document.forms['formt'].submit();return false;">Garáže</a>
+<a href="/predam/restauracie/" onclick="document.getElementById('formt').action = '/predam/restauracie/';document.forms['formt'].submit();return false;">Hotely, reštaurácie</a>
+<a href="/predam/chata/" onclick="document.getElementById('formt').action = '/predam/chata/';document.forms['formt'].submit();return false;">Chalupy, Chaty</a>
+<a href="/predam/kancelar/" onclick="document.getElementById('formt').action = '/predam/kancelar/';document.forms['formt'].submit();return false;">Kancelárie</a>
+<a href="/predam/priestory/" onclick="document.getElementById('formt').action = '/predam/priestory/';document.forms['formt'].submit();return false;">Obchodné priestory</a>
+<a href="/predam/pozemok/" onclick="document.getElementById('formt').action = '/predam/pozemok/';document.forms['formt'].submit();return false;">Pozemky</a>
+<a href="/predam/sklad/" onclick="document.getElementById('formt').action = '/predam/sklad/';document.forms['formt'].submit();return false;">Sklady</a>
+<a href="/predam/zahrada/" onclick="document.getElementById('formt').action = '/predam/zahrada/';document.forms['formt'].submit();return false;">Záhrady</a>
+<a href="/predam/ostatni/" onclick="document.getElementById('formt').action = '/predam/ostatni/';document.forms['formt'].submit();return false;">Ostatné</a>
+</div></div>
+<br>
+
+<div class="nadpismenu"><a href="/prenajmu/" onclick="document.getElementById('formt').action = '/prenajmu/';document.forms['formt'].submit();return false;">Prenájom</a></div>
+<div class="barvalmenu">
+<div class="barvaleva">
+<a href="/prenajmu/byt/" onclick="document.getElementById('formt').action = '/prenajmu/byt/';document.forms['formt'].submit();return false;" id=zvyraznenikat>Byty</a>
+<a href="/prenajmu/dom/" onclick="document.getElementById('formt').action = '/prenajmu/dom/';document.forms['formt'].submit();return false;">Domy</a>
+<a href="/prenajmu/projekty/" onclick="document.getElementById('formt').action = '/prenajmu/projekty/';document.forms['formt'].submit();return false;">Nové projekty</a>
+<a href="/prenajmu/podnajom/" onclick="document.getElementById('formt').action = '/prenajmu/podnajom/';document.forms['formt'].submit();return false;">Podnájom, spolubývajúci</a>
+<a href="/prenajmu/garaz/" onclick="document.getElementById('formt').action = '/prenajmu/garaz/';document.forms['formt'].submit();return false;">Garáže</a>
+<a href="/prenajmu/restauracie/" onclick="document.getElementById('formt').action = '/prenajmu/restauracie/';document.forms['formt'].submit();return false;">Hotely, reštaurácie</a>
+<a href="https://sluzby.bazos.sk/ubytovanie/">Ubytovanie</a>
+<a href="/prenajmu/kancelar/" onclick="document.getElementById('formt').action = '/prenajmu/kancelar/';document.forms['formt'].submit();return false;">Kancelárie</a>
+<a href="/prenajmu/priestory/" onclick="document.getElementById('formt').action = '/prenajmu/priestory/';document.forms['formt'].submit();return false;">Obchodné priestory</a>
+<a href="/prenajmu/pozemok/" onclick="document.getElementById('formt').action = '/prenajmu/pozemok/';document.forms['formt'].submit();return false;">Pozemky</a>
+<a href="/prenajmu/sklad/" onclick="document.getElementById('formt').action = '/prenajmu/sklad/';document.forms['formt'].submit();return false;">Sklady</a>
+<a href="/prenajmu/zahrada/" onclick="document.getElementById('formt').action = '/prenajmu/zahrada/';document.forms['formt'].submit();return false;">Záhrady</a>
+<a href="/prenajmu/ostatni/" onclick="document.getElementById('formt').action = '/prenajmu/ostatni/';document.forms['formt'].submit();return false;">Ostatné</a>
+</div></div>
+</div><div class="maincontent">
+
+
+<div class="listainzerat inzeratyflex">
+<div class="inzeratynadpis"><img src="https://www.bazos.sk/obrazky/list.gif" width="18" height="16" alt="List inzerátov" class=gallerylista> <form name="formgal" id="formgal" method="post" style="display: inline;"><input type="hidden" name="gal" value="g"><input type="image" alt="Submit" src="https://www.bazos.sk/obrazky/gallery.gif" width="18" height="16" class="gallerylist inputgal"></form> Zobrazených 141-152 inzerátov z 152</div>
+<div class="inzeratycena"><b><span onclick="document.getElementById('order').value=1;document.forms['formt'].submit();" class="paction">Cena</span></b></div>
+<div class="inzeratylok">Lokalita</div>
+<div class="inzeratyview"><span onclick="document.getElementById('order').value=3;document.forms['formt'].submit();" class="paction">Zobrazenie</span></div>
+</div><form name="formaction" method="post" style="display: inline;"><input type="hidden" id="postaction" name="postaction" value=""><input type="hidden" id="postv1" name="postv1" value=""><input type="hidden" id="postv2" name="postv2" value=""><input type="hidden" id="postv3" name="postv3" value=""></form><button type="button" onclick="odeslatrequest('/agent.php','teloverit=');overlay();">Nové inzeráty e-mailom</button>
+	<div id="overlay">
+     <div></div>
+</div>
+
+<div id="container_one"></div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195509406/byt-na-prenajom-poprad.php"><img src="https://www.bazos.sk/img/1t/406/195509406.jpg?t=1789321639" class="obrazek" alt="Byt na prenájom Poprad" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195509406/byt-na-prenajom-poprad.php">Byt na prenájom Poprad</a></h2><span class=velikost10> - [13.9. 2026]</span><br>
+<div class=popis>🏡 3-izbový byt na prenájom – Poprad, Hviezdoslavova 25
+Ponúkame na prenájom priestranný 3-izbový byt s výmerou približne 90 m², nachádzajúci sa na 1. poschodí bytového domu na Hviezdoslavovej ulici 25 v Poprade.
+Byt prešiel rekonštrukciou v roku 2020 a ponúka príjemný priestor vhodný na dlhodobé b ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   700 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">894 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195509406');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195509406');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195509406');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195491067/1-izbovy-byt.php"><img src="https://www.bazos.sk/img/1t/067/195491067.jpg" class="obrazek" alt="1 izbový byt" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195491067/1-izbovy-byt.php">1 izbový byt</a></h2><span class=velikost10> - [13.9. 2026]</span><br>
+<div class=popis>1 izbový byt
+1 izbový byt
+Ponúkame do prenájmu 1 izbový byt o rozlohe 55 m2 v bytovom dome na ul. L. Svobodu. Byt je prerobený vo forme štúdia.
+K dispozícii od 1.10.2026
+
+POPIS BYTU:
+• poschodie 1 (1/3)
+• podlahová plocha bytu 42 m2 + 12 m2 galéria
+• orientácia JV
+• kúpeľňa s vaňou a WC
+•  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   450 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">949 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195491067');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195491067');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195491067');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195445890/prenajom-1-izboveho-bytu.php"><img src="https://www.bazos.sk/img/1t/890/195445890.jpg?t=1789365172" class="obrazek" alt="Prenájom 1 izbového bytu" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195445890/prenajom-1-izboveho-bytu.php">Prenájom 1 izbového bytu</a></h2><span class=velikost10> - [11.9. 2026]</span><br>
+<div class=popis>Ponúkam na dlhodobý prenájom 1 izbový byt v Poprade, na ulici L.Svobodu. Rozloha bytu je 39m2, na 9 poschodí, s balkónom a pivnicou.  Byt je kompletne zariadený a ihneď voľný. Preferujem nefajčiara a bez domácich zvierat. Cena nájmu je 460€ vrátane energií a internetu, pre 1 osobu. Pri podpise zmluv ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   460 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">926 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195445890');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195445890');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195445890');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195438575/prenajom-1-izbovy-byt-41m2-internet-tv-magio.php"><img src="https://www.bazos.sk/img/1t/575/195438575.jpg?t=1791100627" class="obrazek" alt="PRENÁJOM - 1 izbový byt (41m2) + Internet + TV Magio" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195438575/prenajom-1-izbovy-byt-41m2-internet-tv-magio.php">PRENÁJOM - 1 izbový byt (41m2) + Internet + TV Magio</a></h2><span class=velikost10> - [11.9. 2026]</span><br>
+<div class=popis>NA PRENÁJOM ponúkame 1 izbový byt v POPRADE s výhľadom na Tatry  
+
+•Ul. Mládeže, sídlisko JUH
+
+• BYT SA PRENAJÍMA zariadený (tak ako vidíte na fotografiách),
+
+• 8. poschodie (z 8) s výhľadom na Tatry (inštalácia klimatizácie v štádiu plánovania)
+
+• má 41 m2
+
+• k bytu prislúcha aj pivnica
+ ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   430 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">947 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195438575');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195438575');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195438575');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195433052/na-prenajom-2-izbovy-zariadeny-byt-52-m2-pri-poprade.php"><img src="https://www.bazos.sk/img/1t/052/195433052.jpg?t=1793613096" class="obrazek" alt="NA PRENÁJOM 2 izbový, Mengusovce, 52 m2" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195433052/na-prenajom-2-izbovy-zariadeny-byt-52-m2-pri-poprade.php">NA PRENÁJOM 2 izbový, Mengusovce, 52 m2</a></h2><span class=velikost10> - [11.9. 2026]</span><br>
+<div class=popis>Ponúkame do dlhodobého prenájmu 2 izbový, kompletne zariadený byt s 2 balkónmi, v tichej časti obce Mengusovce, pri Poprade - alternatíva k mestskému bývaniu.
+
+Popis:
+- 1. poschodie
+- spálňa
+- obývacia izba s kuchyňou
+- 2 x WC s kúpeľňou
+- výmera 52 m2 + 2 x 6m2 balkón
+- kompletne zariadený  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   595 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">715 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195433052');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195433052');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195433052');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195408298/prenajom-izby-v-3-izbovom-byte-poprad.php"><img src="https://www.bazos.sk/obrazky/empty.gif" class="obrazek" alt="Prenájom izby v 3-izbovom byte Poprad" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195408298/prenajom-izby-v-3-izbovom-byte-poprad.php">Prenájom izby v 3-izbovom byte Poprad</a></h2><span class=velikost10> - [10.9. 2026]</span><br>
+<div class=popis>Zdravím, hľadám si k sebe spolubývajúcu/spolubývajúceho do 3 izbového novo-zariadeného plne vybaveného bytu na starom juhu v Poprade pri kostole, od 1. októbra. Len seriózny záujem, preferujem zodpovedného a pracujúceho človeka. Cena nájmu 375eur vrátane energií. Viac info v správe - tel. kontakt -  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   375 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">1047 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195408298');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195408298');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195408298');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195366962/priestranny-2-izbovy-byt-v-centre-mesta-popradu.php"><img src="https://www.bazos.sk/img/1t/962/195366962.jpg" class="obrazek" alt="Priestranný 2- izbový byt v centre mesta Popradu" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195366962/priestranny-2-izbovy-byt-v-centre-mesta-popradu.php">Priestranný 2- izbový byt v centre mesta Popradu</a></h2><span class=velikost10> - [9.9. 2026]</span><br>
+<div class=popis>Ponúkame na dlhodobý prenájom veľký, kompletne zariadený 2-izbový byt v tichej lokalite v centre mesta na Francisciho ulici. Byt sa nachádza na 2. poschodí v slušnom tehlovom bytovom dome bez výťahu, na ktorom boli realizované nové balkóny.
+Základné informácie:
+• Rozloha: 65 m²
+• Dostupnosť: Byt  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   650 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">852 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195366962');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195366962');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195366962');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195366854/ponukame-na-prenajom-2-izbovy-byt-priamo-v-centre-mesta.php"><img src="https://www.bazos.sk/img/1t/854/195366854.jpg" class="obrazek" alt="Ponúkame na prenájom 2-izbový byt priamo v centre mesta" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195366854/ponukame-na-prenajom-2-izbovy-byt-priamo-v-centre-mesta.php">Ponúkame na prenájom 2-izbový byt priamo v centre mesta</a></h2><span class=velikost10> - [9.9. 2026]</span><br>
+<div class=popis>Ponúkame na prenájom 2-izbový, čiastočne zariadený byt priamo v centre mesta na Hviezdoslavovej ulici 337/17, v bytovom dome Solisko. Byt sa nachádza na 1. podlaží (z celkovo 3) v slušnom tehlovom bytovom dome.
+Základné informácie:
+• Typ budovy: Tehlový bytový dom Solisko bez výťahu a balkónu (1.  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   590 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">760 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195366854');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195366854');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195366854');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195347598/dlhodoby-prenajom-poprad-centrum-parkovanie-pivnica.php"><img src="https://www.bazos.sk/img/1t/598/195347598.jpg?t=1790602407" class="obrazek" alt="Dlhodobý prenájom Poprad - centrum, parkovanie, pivnica" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195347598/dlhodoby-prenajom-poprad-centrum-parkovanie-pivnica.php">Dlhodobý prenájom Poprad - centrum, parkovanie, pivnica</a></h2><span class=velikost10> - [8.9. 2026]</span><br>
+<div class=popis>Dlhodobý (aj krátkodobý) prenájom 2 izbového bytu v širšom centre Popradu (ul Rovná).
+
+Byt je kompletne zariadený, vrátane zariadenia kuchyne a domácich spotrebičov, byt má balkón.
+- k dispozícii od 01.10.2026, dlhodobý prenájom. 
+- byt je vhodný pre jednotlivca alebo pár, iba bez detí a domácic ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   650 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">832 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195347598');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195347598');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195347598');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195340761/na-prenajom-1-izbovy-byt-poprad-zapad.php"><img src="https://www.bazos.sk/img/1t/761/195340761.jpg?t=1789662390" class="obrazek" alt="NA PRENÁJOM 1 IZBOVÝ BYT, POPRAD- ZÁPAD" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195340761/na-prenajom-1-izbovy-byt-poprad-zapad.php">NA PRENÁJOM 1 IZBOVÝ BYT, POPRAD- ZÁPAD</a></h2><span class=velikost10> - [8.9. 2026]</span><br>
+<div class=popis>FLATONIC | LICENCOVANÁ REALITNÁ SPOLOČNOSŤ  Vám ponúka na dlhodobý prenájom kompletne zariadený 1 izbový byt v Poprade na sídlisku Západ v bytovom dome Javor. K bytu prislúcha aj parkovacie státie pred bytovým domom.
+Je kompletne zariadený a k dispozícii je od 1.9. 2026
+byt:
+-  v osobnom vlastníc ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   500 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">982 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195340761');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195340761');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195340761');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195307331/prenajmem-2i-byt-v-poprade.php"><img src="https://www.bazos.sk/img/1t/331/195307331.jpg?t=1789547537" class="obrazek" alt="Prenajmem 2i byt v Poprade" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195307331/prenajmem-2i-byt-v-poprade.php">Prenajmem 2i byt v Poprade</a></h2><span class=velikost10> - [7.9. 2026]</span><br>
+<div class=popis>Dám do DLHODOBÉHO PRENÁJMU 2 - izbový byt na ul. Ludvíka Svobodu v Poprade, ktorý sa nachádza na vyvýšenom prízemí. K dispozícii bude predbežne od polovice resp. koncom októbra. Byt sa prenajíma zariadený. 
+Výška mesačného nájmu je 550€ vrátane energií a internetu. Depozit vo výške jedného mesačnéh ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   550 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">1033 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195307331');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195307331');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195307331');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="/inzerat/195250742/2-izbovy-byt-karpatska-residencie-poprad.php"><img src="https://www.bazos.sk/img/1t/742/195250742.jpg?t=1792949710" class="obrazek" alt="2 izbovy byt Karpatská residence  Poprad" width="170" height="128"></a>
+<h2 class=nadpis><a href="/inzerat/195250742/2-izbovy-byt-karpatska-residencie-poprad.php">2 izbovy byt Karpatská residence  Poprad</a></h2><span class=velikost10> - [5.9. 2026]</span><br>
+<div class=popis>Od 1.11.2026 dám do prenajmú 2 izbový byt v novostavbe Karpatská v Poprade. 
+Plne zariadený byt sa nachádza v novostavbe na treťom poschodí s balkonom a výhladom na Tatry. Byt je plne zariadený s pripojením na internet. Byt pozostáva z kuchyne spojenej s obývacou izbou, samostatnej spálne, kúpeľne  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   700 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">1168 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','195250742');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','195250742');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','195250742');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+<div id="container_two"></div><script type="text/javascript" charset="utf-8">
+var pageOptions = {
+  'pubId': 'pub-3645948300403337',
+  'query' : "Byty prenájom Poprad",
+  "channel": "9996247788",  'linkTarget' : '_blank',
+  'personalizedAds' : false,
+  'adsafe': 'medium',
+  'ivt': false,
+'styleId' : '6171314811',  'adPage': 8,
+  'hl': 'sk'
+};
+
+var adblock1 = {
+  'container': 'container_one',
+  'width': 'auto',
+  'maxTop' : 2
+};
+
+var adblock2 = {
+  'container': 'container_two',
+  'width': 'auto',
+  'number' : 2
+};
+
+_googCsa('ads', pageOptions, adblock2);</script>
+
+<br><div class="strankovani">Stránka: <a href="/prenajmu/byt/120/?hledat=&hlokalita=05801&humkreis=5&cenaod=&cenado=700&order="><b>Predošlá</b></a> <a href="/prenajmu/byt/20/?hledat=&hlokalita=05801&humkreis=5&cenaod=&cenado=700&order=">2</a> <a href="/prenajmu/byt/40/?hledat=&hlokalita=05801&humkreis=5&cenaod=&cenado=700&order=">3</a> <a href="/prenajmu/byt/60/?hledat=&hlokalita=05801&humkreis=5&cenaod=&cenado=700&order=">4</a> <a href="/prenajmu/byt/80/?hledat=&hlokalita=05801&humkreis=5&cenaod=&cenado=700&order=">5</a> <a href="/prenajmu/byt/100/?hledat=&hlokalita=05801&humkreis=5&cenaod=&cenado=700&order=">6</a> <a href="/prenajmu/byt/120/?hledat=&hlokalita=05801&humkreis=5&cenaod=&cenado=700&order=">7</a> <b><span class=cisla>8</span></b></div><br><br><br>
+
+
+</div></div><br>
+
+&copy;2026 Bazoš - <b>Inzercia, bazár Byty</b><br>
+<a href="https://www.bazos.sk/pomoc.php">Pomoc</a>, <a href="https://www.bazos.sk/otazky.php">Otázky</a>, <a href="https://www.bazos.sk/hodnotenie.php">Hodnotenie</a>, <a href="https://www.bazos.sk/kontakt.php">Kontakt</a>, <a href="https://www.bazos.sk/reklama.php">Reklama</a>, <a href="https://www.bazos.sk/podmienky.php">Podmienky</a>, <a href="https://www.bazos.sk/ochrana-udajov.php">Ochrana údajov</a>, <span onclick="odeslatakci('rss','&cat=152&typ=3&hlokalita=05801&humkreis=5&cenado=700');return false;" class="paction">RSS</span>, <form name="formvkm" id="formvkm" method="post" style="display: inline;"><input type="hidden" name="vkm" value="m"><input type="submit" class="vkm" value="Mobilná verzia"></form><br>
+
+Inzeráty Reality celkom: <b>64283</b>, za 24 hodín: <b>6983</b><br><br>
+<a href="https://www.bazos.sk/mapa-kategorie.php">Mapa kategórií</a>, <a href="https://reality.bazos.sk/mapa-search.php">Najvyhľadávanejšie výrazy</a>
+<br>
+Krajiny: <a href="https://reality.bazos.sk">Slovensko</a>, <a href="https://reality.bazos.cz">Česká republika</a>, <a href="https://nieruchomosci.bazos.pl">Poľsko</a>, <a href="https://immobilien.bazos.at">Rakúsko</a>
+<br>
+<br>
+</div>
+
+<script src="https://www.bazos.sk/cookie-consent.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({"notice_banner_type":"simple","consent_type":"express","palette":"light","language":"sk","page_load_consent_levels":["strictly-necessary"],"notice_banner_reject_button_hide":false,"preferences_center_close_button_hide":false,"page_refresh_confirmation_buttons":false,"cookie_domain": "bazos.sk"});
+});
+</script>
+<a href="#" id="open_preferences_center"> </a>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HLZSNE9Z0C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HLZSNE9Z0C');
+</script>
+
+</body>
+</html>

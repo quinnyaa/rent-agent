@@ -1,0 +1,15 @@
+# залежності
+node_modules/
+
+# секрети й особисті налаштування
+.env
+criteria.md
+.claude/settings.local.json
+
+# дані агента: БД, фото, логи, lock
+data/
+shortlist.md
+*.log
+
+# macOS
+.DS_Store

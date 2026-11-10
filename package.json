@@ -1,0 +1,38 @@
+{
+  "name": "rent-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Персональний агент пошуку оренди квартири на bazos.sk: аналіз оголошень через Claude Code CLI, сповіщення в Telegram",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "once": "node --disable-warning=ExperimentalWarning --import tsx src/run.ts",
+    "sync": "node --disable-warning=ExperimentalWarning --import tsx src/run.ts --sync",
+    "backfill:extras": "node --disable-warning=ExperimentalWarning --import tsx src/backfill-extras.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "schedule:install": "bash scripts/schedule.sh install",
+    "schedule:uninstall": "bash scripts/schedule.sh uninstall",
+    "schedule:enable": "bash scripts/schedule.sh enable",
+    "schedule:disable": "bash scripts/schedule.sh disable",
+    "schedule:status": "bash scripts/schedule.sh status",
+    "schedule:run-now": "bash scripts/schedule.sh run-now",
+    "schedule:sync": "bash scripts/schedule.sh sync"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "dotenv": "^18.0.9",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0"
+  }
+}

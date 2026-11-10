@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<title>Kompletne zariadený 2 izbový byt v novostavbe Jedlička - Poprad | Bazoš.sk</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="description" content="Inzerát č. 196497972: Kompletne zariadený 2 izbový byt v novostavbe Jedlička, Cena: 550 €, Lokalita: Poprad. Popis: Hľadáte príjemný, moderný a."><meta property="og:image" content="https://www.bazos.sk/img/1/972/196497972.jpg?t=1792597100"><meta property="og:title" content="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - Poprad">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bazos.sk">
+<meta property="og:description" content="Inzerát č. 196497972: Kompletne zariadený 2 izbový byt v novostavbe Jedlička, Cena: 550 €, Lokalita: Poprad. Popis: Hľadáte príjemný, moderný a.">
+<link rel="canonical" href="https://reality.bazos.sk/inzerat/196497972/kompletne-zariadeny-2-izbovy-byt-v-novostavbe-jedlicka.php"><meta property="fb:admins" content="1055875657">
+<meta name="ROBOTS" content="max-image-preview:large">
+<link rel="preload" as="image" href="https://www.bazos.sk/img/1/972/196497972.jpg?t=1792597100"><link rel="stylesheet" href="https://www.bazos.sk/bazos68s.css" type="text/css"><link rel="preload" as="image" href="https://www.bazos.sk/obrazky/bazos.svg">
+<link rel="stylesheet" href="https://www.bazos.sk/bazosprint.css" type="text/css" media="print">
+<link rel="icon" href="https://www.bazos.sk/favicon.svg" type="image/svg+xml">
+<link rel="icon" HREF="https://www.bazos.sk/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="https://www.bazos.sk/apple-touch-icon.png">
+
+<script async="async" src="https://www.google.com/adsense/search/ads.js"></script>
+<script type="text/javascript" charset="utf-8">
+(function(g,o){g[o]=g[o]||function(){(g[o]['q']=g[o]['q']||[]).push(
+  arguments)},g[o]['t']=1*new Date})(window,'_googCsa');
+</script><script>
+var xhr = new XMLHttpRequest();
+var naseptavac_value = '';
+function naseptavac(value) {
+  if (value=='')  {
+  	naseptavac_value = '';
+  	document.getElementById('vysledek').innerHTML='';
+  	}
+else {
+	if (naseptavac_value == value) {
+		return false;
+	}
+	naseptavac_value = value;
+	setTimeout(function () {
+		if (naseptavac_value != value) {
+			return false;
+		}
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4 && naseptavac_value == value){
+				document.getElementById('vysledek').innerHTML = this.responseText;
+			}
+ 		 };
+		xhr.open("POST", '/suggest.php');
+		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhr.send('rubnas=RE&catnas=152&qnas='+encodeURIComponent(naseptavac_value));
+	}, 250);
+}
+}
+
+var naseptavacpsc_value = '';
+function naseptavacpsc(value) {
+  if (value=='')  {
+  	naseptavacpsc_value = '';
+  	document.getElementById('vysledekpsc').innerHTML='<table cellpadding=\"3\" cellspacing=\"0\" class=\"tablenaspsc\"><tr><td class=\"act\" onclick=\"getLocation();\"><b>Inzeráty v okolí</b></td></tr></table>';
+  	}
+else {
+	if (naseptavacpsc_value == value) {
+		return false;
+	}
+	naseptavacpsc_value = value;
+	setTimeout(function () {
+		if (naseptavacpsc_value != value) {
+			return false;
+		}
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4 && naseptavacpsc_value == value){
+				document.getElementById('vysledekpsc').innerHTML = this.responseText;
+			}
+ 		 };
+		xhr.open("POST", '/suggestpsc.php');
+		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhr.send('qnaspsc='+encodeURIComponent(naseptavacpsc_value));
+	}, 250);
+}
+}
+
+function getLocation() {
+if (navigator.geolocation) {navigator.geolocation.getCurrentPosition(showPosition);}
+else {document.getElementById('hlokalita').value = '';}
+}
+function showPosition(position) {
+		xhr.onreadystatechange = function() {
+ 		 if (this.readyState == 4){
+				document.getElementById('hlokalita').value = this.responseText;
+				document.forms['formt'].submit();
+			}
+ 		 };
+		xhr.open("POST", '/zip.php');
+		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhr.send('latitude='+encodeURIComponent(position.coords.latitude)+'&longitude='+encodeURIComponent(position.coords.longitude));
+}
+
+function favouriteadd(value,params,obradresa) {
+xhr.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200){
+				document.getElementById('favour').innerHTML = this.responseText;
+				document.getElementById('obrfavour').src = obradresa;
+			}
+  };
+xhr.open("POST", value);
+xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+xhr.send(params);
+}
+
+function odeslatrequest(value,params,overvalue) {
+xhr.onreadystatechange = function() {
+  if (this.readyState == 4){
+				document.getElementById(overvalue).innerHTML = this.responseText;
+			}
+  };
+xhr.open("POST", value);
+xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+xhr.send(params);
+}
+function odeslatakci(postaction,value1,value2,value3) {
+document.getElementById('postaction').value = postaction;
+document.getElementById("postv1").value = value1;
+document.getElementById("postv2").value = value2;
+document.getElementById("postv3").value = value3;
+document.formaction.submit();
+}
+</script>
+<script src="https://www.bazos.sk/flickity2.js"></script></head>
+
+<body>
+
+<div class="sirka">
+
+
+<div class="listalogor">
+<div class="listalogol"><a href="https://www.bazos.sk/" title="Bazos.sk - Inzercia, inzeráty"><img src="https://www.bazos.sk/obrazky/bazos.svg" width="199" height="34" alt="Bazos.sk - Inzercia, inzeráty"></a></div>
+<div class="listalogom"><b>... inzercia pre každého</b></div>
+<div class="listalogop"><a href="https://www.bazos.sk/oblubene.php"><b>Obľúbené inzeráty</b></a> <a href="https://www.bazos.sk/moje-inzeraty.php"><b>Moje inzeráty</b></a> <a href="/pridat-inzerat.php"><b><span class=pridati>Pridať inzerát</span></b></a></div>
+</div>
+<form name="formt" id="formt" method=get action=/>
+<div class="listah">
+<div class="rubriky">
+<b>
+Čo: <span class=vysokoli><span id="vysledek"></span><input type="search" onkeyup="naseptavac(this.value);" id=hledat name=hledat size="17" maxlength="256" value="" autocomplete="off" title="Čo? Hľadaný výraz"></span>
+
+<select name="rubriky" onchange='this.form.submit();' title="Vyber rubriku">
+<option value="www">Všetky rubriky</option>
+<option value="auto">Auto</option><option value="deti">Deti</option><option value="dom">Dom a záhrada</option><option value="elektro">Elektro</option><option value="foto">Foto</option><option value="hudba">Hudba</option><option value="knihy">Knihy</option><option value="mobil">Mobily</option><option value="motocykle">Motocykle</option><option value="nabytok">Nábytok</option><option value="oblecenie">Oblečenie</option><option value="pc">PC</option><option value="praca">Práca</option><option value="reality" selected>Reality</option><option value="sluzby">Služby</option><option value="stroje">Stroje</option><option value="sport">Šport</option><option value="vstupenky">Vstupenky</option><option value="zvierata">Zvieratá</option><option value="ostatne">Ostatné</option></select>
+
+PSČ (miesto): <span class=vysokolipsc><span id="vysledekpsc"></span><input type="search" name="hlokalita" id="hlokalita" onkeyup="naseptavacpsc(this.value);" onclick="naseptavacpsc(this.value);" value="" size="5" maxlength="25" autocomplete="off" title="Kde? PSČ (miesto)" style="-webkit-appearance: none;"></span>
+Okolie: <input name="humkreis" title="Okolie v km" value="10" size="3" style="width: 25px;"> km
+Cena od: <input name=cenaod title="Cena od €" maxlength="12" size="4" value=""> - do: <input name=cenado title="Cena do €" maxlength="12" size="4" value=""> €  <input type="submit" name="Submit" value="Hľadať">
+<input type="hidden" name="order" id="order"><input type="hidden" name="crp" id="crp"><input type="hidden" id="kitx" name="kitx" value="ano"></b>
+</div>
+</div>
+</form>
+<div class="drobky"><a href=https://www.bazos.sk/>Hlavná stránka</a>  > <a href="https://reality.bazos.sk/">Reality</a> > <a href="https://reality.bazos.sk/prenajmu/">Prenájom</a> > <a href="https://reality.bazos.sk/prenajmu/byt/">Byty</a> > <b>Inzerát č. 196497972</b></div>
+<br>
+
+
+<div class="flexmain"><div class="menuleft"><div class="nadpismenu"><a href="/predam/" >Predaj</a></div>
+<div class="barvalmenu">
+<div class="barvaleva">
+<a href="/predam/byt/" >Byty</a>
+<a href="/predam/dom/" >Domy</a>
+<a href="/predam/projekty/" >Nové projekty</a>
+<a href="/predam/garaz/" >Garáže</a>
+<a href="/predam/restauracie/" >Hotely, reštaurácie</a>
+<a href="/predam/chata/" >Chalupy, Chaty</a>
+<a href="/predam/kancelar/" >Kancelárie</a>
+<a href="/predam/priestory/" >Obchodné priestory</a>
+<a href="/predam/pozemok/" >Pozemky</a>
+<a href="/predam/sklad/" >Sklady</a>
+<a href="/predam/zahrada/" >Záhrady</a>
+<a href="/predam/ostatni/" >Ostatné</a>
+</div></div>
+<br>
+
+<div class="nadpismenu"><a href="/prenajmu/" >Prenájom</a></div>
+<div class="barvalmenu">
+<div class="barvaleva">
+<a href="/prenajmu/byt/"  id=zvyraznenikat>Byty</a>
+<a href="/prenajmu/dom/" >Domy</a>
+<a href="/prenajmu/projekty/" >Nové projekty</a>
+<a href="/prenajmu/podnajom/" >Podnájom, spolubývajúci</a>
+<a href="/prenajmu/garaz/" >Garáže</a>
+<a href="/prenajmu/restauracie/" >Hotely, reštaurácie</a>
+<a href="https://sluzby.bazos.sk/ubytovanie/">Ubytovanie</a>
+<a href="/prenajmu/kancelar/" >Kancelárie</a>
+<a href="/prenajmu/priestory/" >Obchodné priestory</a>
+<a href="/prenajmu/pozemok/" >Pozemky</a>
+<a href="/prenajmu/sklad/" >Sklady</a>
+<a href="/prenajmu/zahrada/" >Záhrady</a>
+<a href="/prenajmu/ostatni/" >Ostatné</a>
+</div></div>
+</div><div class="maincontent">
+
+
+<div class="listainzerat inzeratyflex">
+<div class="inzeratydetnadpis"><H1 class=nadpisdetail>Kompletne zariadený 2 izbový byt v novostavbe Jedlička</H1><span class=velikost10> - <span title="TOP 4x Platí do 12.11. 2026" class="ztop">TOP</span> - [3.11. 2026]</span></div>
+<div class="inzeratydetdel"><span onclick="odeslatakci('edit','196497972','reality');return false;" class="paction">Zmazať/ Upraviť/ Topovať</span></div>
+</div><br><div class="fliobal"><div class="carousel"><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/1/972/196497972.jpg?t=1792597100" src="https://www.bazos.sk/img/1/972/196497972.jpg?t=1792597100" width="960" height="600" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/2/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 2"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/3/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 3"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/4/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 4"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/5/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 5"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/6/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 6"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/7/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 7"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/8/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 8"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/9/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 9"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/10/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 10"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/11/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 11"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/12/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 12"></div><div class="carousel-cell"><img class="carousel-cell-image" data-flickity-lazyload="https://www.bazos.sk/img/13/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 13"></div></div><div class="flinavigace" id="nahledy1"><img onmouseover="flkty.select(0, false, true );" src="https://www.bazos.sk/img/1t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 1" class="obrazekflithumb"><br><img onmouseover="flkty.select(1, false, true );" src="https://www.bazos.sk/img/2t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 2" class="obrazekflithumb"><br><img onmouseover="flkty.select(2, false, true );" src="https://www.bazos.sk/img/3t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 3" class="obrazekflithumb"><br><img onmouseover="flkty.select(3, false, true );" src="https://www.bazos.sk/img/4t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 4" class="obrazekflithumb"><br><img onmouseover="flkty.select(4, false, true );" src="https://www.bazos.sk/img/5t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 5" class="obrazekflithumb"><br><div style="margin-left:5px;"><img src="https://www.bazos.sk/obrazky/next.svg" alt="Ďalšia" height="20" onclick="nahledy()"></div></div><div class="flinavigace" id="nahledy3" style="display: none;"><img onmouseover="flkty.select(10, false, true );" src="https://www.bazos.sk/img/11t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 11" class="obrazekflithumb"><br><img onmouseover="flkty.select(11, false, true );" src="https://www.bazos.sk/img/12t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 12" class="obrazekflithumb"><br><img onmouseover="flkty.select(12, false, true );" src="https://www.bazos.sk/img/13t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 13" class="obrazekflithumb"><br><div style="margin-left:5px;"><img src="https://www.bazos.sk/obrazky/next.svg" alt="Ďalšia" height="20" onclick="nahledy()"></div></div><div class="flinavigace" id="nahledy2"><img onmouseover="flkty.select(5, false, true );" src="https://www.bazos.sk/img/6t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 6" class="obrazekflithumb"><br><img onmouseover="flkty.select(6, false, true );" src="https://www.bazos.sk/img/7t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 7" class="obrazekflithumb"><br><img onmouseover="flkty.select(7, false, true );" src="https://www.bazos.sk/img/8t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 8" class="obrazekflithumb"><br><img onmouseover="flkty.select(8, false, true );" src="https://www.bazos.sk/img/9t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 9" class="obrazekflithumb"><br><img onmouseover="flkty.select(9, false, true );" src="https://www.bazos.sk/img/10t/972/196497972.jpg?t=1792597100" alt="Kompletne zariadený 2 izbový byt v novostavbe Jedlička - 10" class="obrazekflithumb"><br></div><div class="flinavigace" id="nahledy4" style="display: none;"></div></div><script>var flkty = new Flickity( '.carousel', {fullscreen: true,lazyLoad: 1,wrapAround: true,adaptiveHeight: true});</script>
+<div class=popisdetail>Hľadáte príjemný, moderný a bezstarostný domov na najobľúbenejšom popradskom sídlisku? Ponúkame do dlhodobého prenájmu svetlý, kompletne zariadený 2-izbový byt s balkónom s výmerou 50 m² (+ 3 m² balkón) v modernej zateplenej novostavbe s výťahom na ulici Ludvíka Svobodu (Starý Juh).<br>
+Byt je pripravený tak, aby ste si doň priniesli len osobné veci – bez nutnosti zariaďovania či ďalších investícií.<br>
+<br>
+🌟 PREČO JE BYT PERFEKTNÝ PRE PÁR ALEBO MLADÚ RODINU?<br>
+• Bytový dom má moderný, priestranný výťah a čisté spoločné priestory. Vynášanie nákupov či kočíka je úplne bezproblémové.<br>
+• Vlastné kúrenie a nízke náklady: Vďaka vlastnému plynovému turbo kondenzačnému kotlu a izbovému termostatu si regulujete teplotu sami – v byte máte vždy príjemné teplo podľa vlastných potrieb a platíte len za reálnu spotrebu.<br>
+• Žiadny večerný stres s parkovaním: K bytu je k dispozícii možnosť prenájmu vlastného vyhradeného parkovacieho miesta priamo pred vchodom.<br>
+• Množstvo úložného priestoru: Veľká vstavaná skriňa (Roll-door) v spálni hravo pojme šatník pre oboch partnerov, ale aj výbavu pre bábätko.<br>
+<br>
+📍 LOKALITA A OBČIANSKA VYBAVENOSŤ – VŠETKO NA PEŠO:<br>
+Starý Juh patrí dlhodobo k najpokojnejším a najkomfortnejším štvrtiam v Poprade:<br>
+ Kočíkovanie a voľný čas: Tiché vnútrobloky plné dospelých stromov, nový mestský park, bezpečné detské ihriská a priame napojenie na obľúbený cyklochodník (ideálny na prechádzky, beh či bicykel smerom na Svit a Kvetnicu).<br>
+ Nákupy a služby doslova za rohom: Pár krokov k potravinám Sintra a OC Poprad (Billa, dm drogéria, lekáreň Dr. Max). V pešej dostupnosti máte OC Max, Lidl, Kaufland, poštu, kaviarne aj reštaurácie.<br>
+ Pre rodiny: Materské školy, jasle aj základné školy v bezprostrednom pešom dosahu, bez nutnosti ranného vozenia autom cez celé mesto.<br>
+ Skvelá dostupnosť: Zastávka MHD priamo pred domom so spojmi do centra a k stanici, rýchle napojenie na obchvat, diaľnicu D1 aj smer Vysoké Tatry.<br>
+<br>
+🛋️ DISPOZÍCIA A VYBAVENIE:<br>
+• Otvorená denná zóna: Svetlá obývacia izba s rohovou sedacou súpravou, konferenčným stolíkom, obývacou stenou, LED TV a barovým jedálenským pultom. Z obývačky je vstup na balkón (3 m²) – ideálne miesto na rannú kávu.<br>
+ Kuchyňa so vstavanými spotrebičmi: Plne vybavená kuchynská linka (varná doska, teplovzdušná rúra, mikrovlnka, umývačka riadu, chladnička s mrazničkou, kamenný drez).<br>
+• Samostatná spálňa: Manželská posteľ s kvalitným matracom pre zdravý spánok a veľkorysá vstavaná skriňa.<br>
+• Kúpeľňa s WC: Moderný sprchový kút, kúpeľňový nábytok a automatická práčka.<br>
+<br>
+📋 PODMIENKY NÁJMU:<br>
+• Dostupnosť: od 1. 12. 2026 (dlhodobý prenájom)<br>
+• Cena nájmu: 550 € / mesiac<br>
+• Zálohové platby za energie: 110 – 170 € / mesiac (podľa počtu osôb)<br>
+• Depozit: 2-mesačný vratný depozit pri podpise nájomnej zmluvy<br>
+• Parkovacie miesto: možnosť prenájmu vyhradeného státia pred vchodom (podmienky dohodou<br>
+• Preferencie: nefajčiari, bez domácich zvierat (prípadne podľa dohody)<br>
+<br>
+📞 KONTAKT:<br>
+Byt odporúčame vidieť osobne - presvedťčte sa sami.<br>
+0900 000 000</div><br>
+<table width="100%" cellpadding="5" cellspacing="0">
+<tr><td width="35%" valign=top class=listadvlevo>
+<table width="*" cellpadding="0" cellspacing="1">
+<tr><td height="22px" width="25%">Meno:<br><br></td><td colspan=2><b><span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="paction">Predajca</span></b><br><br></td></tr>
+<tr id="overlaytel"><td height="22px" width="25%">Telefón:<br><br></td><td colspan=2><span class=teldetail onclick="odeslatrequest('/ad-phone.php','idi=196497972&idphone=0','overlaytel');"><span style="white-space: nowrap;">090... zobraz číslo</span></span><br><br></td></tr>
+<tr><td height="22px" width="25%">Lokalita:</td><td width="9%"><img src="https://www.bazos.sk/obrazky/map.svg" alt="Mapa" height="17"></td><td><a href="https://www.google.com/maps/place/49.055223,20.297928/@49.055223,20.297928,12z/data=!4m2!3m1!1s0x0:0x0" title="Približná lokalita" rel="nofollow">058 01</a> <a href="https://reality.bazos.sk/inzeraty/poprad-1/5801/">Poprad</a></td></tr>
+<tr><td height="22px" width="25%"><br>Videlo:</td><td colspan=2><br>1466 ľudí</td></tr>
+<tr><td height="22px" width="25%"><br>Cena:</td><td colspan=2><br><b><span translate="no">   550 €</span></b></td></tr>
+</table>
+</td>
+
+<td width="*" valign=top class=listadvpravo>
+
+<table cellpadding="0" cellspacing="1">
+<tr><td height="22px"><img src="https://www.bazos.sk/obrazky/user.svg" alt="Užívateľ" height="17"></td><td><form name="formaction" method="post" style="display: inline;"><input type="hidden" id="postaction" name="postaction" value=""><input type="hidden" id="postv1" name="postv1" value=""><input type="hidden" id="postv2" name="postv2" value=""><input type="hidden" id="postv3" name="postv3" value=""></form>
+<span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="paction">Všetky inzeráty a hodnotenie užívateľa</span></td></tr>
+<tr><td height="22px"><img id="obrfavour" src="https://www.bazos.sk/obrazky/favourite.svg" alt="Obľúbené" height="18"></td><td><span id="favour"><a href="https://www.bazos.sk/oblubene.php" rel="nofollow">Pridať do obľúbených</a></span></td></tr>
+<tr><td height="22px"><img src="https://www.bazos.sk/obrazky/spam.svg" alt="Spam" height="17"></td><td><span onclick="odeslatakci('spam','196497972');return false;" class="paction">Označiť zlý inzerát</span></td></tr>
+<tr><td height="22px"><img src="https://www.bazos.sk/obrazky/miscat.svg" alt="Chybná kategóra" height="17"></td><td><span onclick="odeslatakci('category','196497972');return false;" class="paction">Označiť chybnú kategóriu inzerátu</span></td></tr>
+<tr><td height="22px"><img src="https://www.bazos.sk/obrazky/print.svg" alt="Vytlačiť" height="17"></td><td><a href="#" onclick="window.print()">Vytlačiť inzerát</a></td></tr>
+<tr><td height="22px"><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Freality.bazos.sk%2Finzerat%2F196497972%2Fkompletne-zariadeny-2-izbovy-byt-v-novostavbe-jedlicka.php" target="_blank" rel="nofollow"><img src="https://www.bazos.sk/obrazky/facebook.svg" alt="Facebook" height="22"></a></td><td><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Freality.bazos.sk%2Finzerat%2F196497972%2Fkompletne-zariadeny-2-izbovy-byt-v-novostavbe-jedlicka.php" target="_blank" rel="nofollow">Zdieľajte na Facebooku</a></td></tr>
+<tr><td height="22px"><img src="https://www.bazos.sk/obrazky/mail.svg" alt="Mail" height="17"></td><td><span onclick="odeslatakci('recommend','196497972');return false;" class="paction">Odporučiť kamarátovi</span></td></tr>
+<tr><td height="22px"><img src="https://www.bazos.sk/obrazky/similar.svg" alt="Podobné" height="17"></td><td><a href="https://reality.bazos.sk/inzeraty/kompletne-zariaden%C3%BD/">Vyhľadať podobné inzeráty</a></td></tr>
+</table>
+
+</td></tr>
+</table>
+<br>
+
+<script>
+function autoResize(id){
+    var newheight;
+    if(document.getElementById){
+        newheight=document.getElementById(id).contentWindow.document.body.scrollHeight+1;
+    }
+    document.getElementById(id).height= (newheight) + "px";
+}
+function nahledy() {
+  var na1 = document.getElementById("nahledy1");
+  var na2 = document.getElementById("nahledy2");
+  var na3 = document.getElementById("nahledy3");
+  var na4 = document.getElementById("nahledy4");
+  if (na1.style.display === "none") {
+    na1.style.display = "block";
+    na2.style.display = "block";
+    na3.style.display = "none";
+    na4.style.display = "none";
+  } else {
+    na1.style.display = "none";
+    na2.style.display = "none";
+    na3.style.display = "block";
+    na4.style.display = "block";
+  }
+}
+</script>
+
+<div class="kontaktniformular"><div class="oranzovy" id="overlaymail"><b>Kontaktovať inzerenta e-mailom</b><br><br>
+Kontaktovať e-mailom môže iba overený užívateľ.<br>
+<br>
+Vaše telefónne číslo <span class="ztop">*</span><br>
+<input type="text" name="teloverit2" id="teloverit2" maxlength="30" autocomplete="off" onkeydown="if (event.keyCode == 13) odeslatrequest('/ad-mail.php','idi=196497972&teloverit='+encodeURIComponent(document.getElementById('teloverit2').value),'overlaymail');">
+<br><br>
+<button type="button" id="mailbutton" onclick="odeslatrequest('/ad-mail.php','idi=196497972&teloverit='+encodeURIComponent(document.getElementById('teloverit2').value),'overlaymail');">Odoslať</button>
+</div></div><br>
+
+<div class="podobne">
+<div id="container_one"></div><br><br><div class="listainzerat"><span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="paction">Ďalšie inzeráty užívateľa</span></div>
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/196601446/moderny-2-izbovy-byt-balkon-3x-parking-pivnica.php"><img src="https://www.bazos.sk/img/1t/446/196601446.jpg?t=1792615448" class="obrazek" alt="Moderný 2-izbový byt, balkón, 3x parking, pivnica" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/196601446/moderny-2-izbovy-byt-balkon-3x-parking-pivnica.php">Moderný 2-izbový byt, balkón, 3x parking, pivnica</a></span><span class=velikost10> - <span title="TOP 4x Platí do 9.11. 2026" class="ztop">TOP</span> - [3.11. 2026]</span><br>
+<div class=popis>Ponúkame na predaj moderne a príjemne zariadený 2-izbový byt s balkónom, pivnicou - kobkou - a troma parkovacími miestami, v zateplenej novostavbe s vlastným kúrením a výťahom. Byt je situovaný na najžiadanejšej adrese v Poprade – ulica Ludvíka Svobodu (Starý Juh).
+
+Byt je svetlý, vzdušný a predáv ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">  189 000 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">1749 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','196601446');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','196601446');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','196601446','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://deti.bazos.sk/inzerat/196222615/cybex-balios-s.php"><img src="https://www.bazos.sk/img/1t/615/196222615.jpg?t=1792774953" class="obrazek" alt="športový kočiar Cybex Balios S" width="170" height="128"></a>
+<span class=nadpis><a href="https://deti.bazos.sk/inzerat/196222615/cybex-balios-s.php">športový kočiar Cybex Balios S</a></span><span class=velikost10> - [5.10. 2026]</span><br>
+<div class=popis>Predám kočík Cybex Balios S, pouzivany, ziadne velke opotrebenia, len male pocas bezneho pouzivania 
+Kociar je lahky, rychlo sa da zlozit a rozlozit, v zlozenom stave zabera malo miesta.
+Farba je siva s ciernou.
+Strieska ma vetracku a da sa predlzit.
+Len osobny odber Poprad/ Vysoke Tatry
+Cena 1 ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   100 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">138 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','196222615');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','196222615');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','196222615','deti');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+<br><br>
+<div class="listainzerat">Podobné inzeráty</div>
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/197126341/prenajom-garsonky-poprad-centrum.php"><img src="https://www.bazos.sk/img/1t/341/197126341.jpg" class="obrazek" alt="Prenájom garsónky Poprad centrum- obsadené do 1.2.2027" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/197126341/prenajom-garsonky-poprad-centrum.php">Prenájom garsónky Poprad centrum- obsadené do 1.2.2027</a></span><span class=velikost10> - [3.11. 2026]</span><br>
+<div class=popis>obsadené do 1.2.2027.
+Ponúkame Vám na prenájom útulnú, kompletne zrekonštruovanú garsónku, blízko centra mesta Poprad. 
+Byt je úplne zariadený: kuchynská linka s plynovou varnou doskou, digestor, vstavaná rúra, chladnička, jedálenský stôl so stoličkami, chodbová stena so zrkadlom, šatníková skriňa ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   410 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">134 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','197126341');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','197126341');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','197126341','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/197124498/na-prenajom-2-izbovy-byt-58m-terasa-nezariadeny-ppcentrum.php"><img src="https://www.bazos.sk/img/1t/498/197124498.jpg" class="obrazek" alt="Na prenájom 2 izbový byt, 58m², terasa nezariadený PPcentrum" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/197124498/na-prenajom-2-izbovy-byt-58m-terasa-nezariadeny-ppcentrum.php">Na prenájom 2 izbový byt, 58m², terasa nezariadený PPcentrum</a></span><span class=velikost10> - [2.11. 2026]</span><br>
+<div class=popis>Ponúkame na dlhodobý prenájom priestranný dvojizbový byt (58m²) v tichom prostredí v centre mesta Poprad na Štefánikovej ulici, pár metrov od pešej zóny a námestia.
+
+V byte sa nachádza obývačka, spálňa, kúpelňa (s vaňou), kuchyňa, špajza, slnečná južne orientovaná terasa a vstupná chodba.
+
+Byt j ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   500 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">99 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','197124498');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','197124498');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','197124498','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/197123217/2-izbovy-byt-na-prenajom-v-rodinnom-dome-poprad-velka.php"><img src="https://www.bazos.sk/img/1t/217/197123217.jpg" class="obrazek" alt="2 izbový byt na prenájom v rodinnom dome – Poprad – Veľká" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/197123217/2-izbovy-byt-na-prenajom-v-rodinnom-dome-poprad-velka.php">2 izbový byt na prenájom v rodinnom dome – Poprad – Veľká</a></span><span class=velikost10> - [2.11. 2026]</span><br>
+<div class=popis>Ponúkame na prenájom príjemný, svetlý a slnečný 2 izbový byt 40 m2, 
+nachádzajúci sa v rodinnom dome 
+v obľúbenej mestskej časti Poprad – Veľká na Lúčnej ulici.
+
+Byt sa prenajíma so základným vybavením, ktoré je na fotografiách.
+ 
+2 izbový byt je situovaný na 1. poschodí trojpodlažného, 
+zate ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   450 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">102 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','197123217');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','197123217');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','197123217','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/197123135/slnecna-zariadena-garsonka-na-prenajom-v-rodinnom-dome.php"><img src="https://www.bazos.sk/img/1t/135/197123135.jpg?t=1793650458" class="obrazek" alt="Slnečná zariadená garsónka na prenájom v rodinnom dome" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/197123135/slnecna-zariadena-garsonka-na-prenajom-v-rodinnom-dome.php">Slnečná zariadená garsónka na prenájom v rodinnom dome</a></span><span class=velikost10> - [2.11. 2026]</span><br>
+<div class=popis>Ponúkame na prenájom príjemnú, svetlú a slnečnú garsónku 26 m2 
+nachádzajúcu sa v rodinnom dome 
+v obľúbenej mestskej časti Poprad – Veľká na Lúčnej ulici.
+
+Garsónka sa prenajíma so základným vybavením, ktoré je na fotografiách.
+ 
+Garsónka je situovaná na vyvýšenom prízemí trojpodlažného, 
+za ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   390 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">76 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','197123135');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','197123135');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','197123135','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/197122869/slnecny-3-izb-byt-v-rodinnom-dome-poprad-velka.php"><img src="https://www.bazos.sk/img/1t/869/197122869.jpg?t=1793650868" class="obrazek" alt="slnečný 3-izb. byt v rodinnom dome – Poprad – Veľká" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/197122869/slnecny-3-izb-byt-v-rodinnom-dome-poprad-velka.php">slnečný 3-izb. byt v rodinnom dome – Poprad – Veľká</a></span><span class=velikost10> - [2.11. 2026]</span><br>
+<div class=popis>Ponúkame na prenájom priestranný a slnečný 3-izbový byt, 67m2  
+situovaný na zvýšenom prízemí zatepleného tehlového rodinného domu 
+v mestskej časti Poprad – Veľká na ulici Lúčna.
+
+Byt je zaujímavou možnosťou pre tých, 
+ktorí hľadajú komfortné bývanie s dostatkom priestoru 
+v pokojnejšom prost ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   600 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">85 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','197122869');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','197122869');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','197122869','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/197122700/slnecny-zariadeny-15-izb-byt-s-balkonom-v-rodinnom-dome.php"><img src="https://www.bazos.sk/img/1t/700/197122700.jpg" class="obrazek" alt="Slnečný zariadený 1,5 izb. byt s balkónom v rodinnom dome" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/197122700/slnecny-zariadeny-15-izb-byt-s-balkonom-v-rodinnom-dome.php">Slnečný zariadený 1,5 izb. byt s balkónom v rodinnom dome</a></span><span class=velikost10> - [2.11. 2026]</span><br>
+<div class=popis>Ponúkame na prenájom príjemný, svetlý a slnečný 1,5 izbový byt s balkónom 35 m2, 
+nachádzajúci sa v rodinnom dome 
+v obľúbenej mestskej časti Poprad – Veľká na Lúčnej ulici.
+
+Praktická 1,5-izbová dispozícia poskytuje viac možností využitia priestoru než klasická garsónka. 
+Umožňuje vytvoriť si  ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   450 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">86 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','197122700');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','197122700');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','197122700','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/197122239/prenajmem-dva-a-pol-izbovy-byt-v-centre-popradu.php"><img src="https://www.bazos.sk/img/1t/239/197122239.jpg?t=1793649776" class="obrazek" alt="Prenajmem dva a pol izbový byt v centre Popradu" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/197122239/prenajmem-dva-a-pol-izbovy-byt-v-centre-popradu.php">Prenajmem dva a pol izbový byt v centre Popradu</a></span><span class=velikost10> - [2.11. 2026]</span><br>
+<div class=popis>Prenajmem dlhodobo komplet zariadený dva a pol izbový byt v centre Popradu na Nám sv. Egídia.
+Byt pozostáva z chodby ,obývačky a veľkého prestavaného balkónu z dvojkrídlovými  dverami ,kuchyne prepojenej z obývačkou , spálne a menšej samostatnej izby z posteľou.   
+II. poschodie ,bezproblémové par ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   650 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">91 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','197122239');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','197122239');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','197122239','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/197119818/1-izbovy-byt-do-prenajmu-v-meste-poprad.php"><img src="https://www.bazos.sk/img/1t/818/197119818.jpg" class="obrazek" alt="1 - izbový byt do prenájmu v meste Poprad" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/197119818/1-izbovy-byt-do-prenajmu-v-meste-poprad.php">1 - izbový byt do prenájmu v meste Poprad</a></span><span class=velikost10> - [2.11. 2026]</span><br>
+<div class=popis>🏠 Ponúkame&nbsp;do prenájmu 1 - izbový byt v meste Poprad na ulici Suchoňová
+
+Hľadáte príjemné bývanie v Poprade s jasne stanovenými mesačnými nákladmi? Tento 1-izbový byt na Suchoňovej ulici je k dispozícii ihneď a môže byť vaším novým domovom bez zbytočného čakania.✅
+
+ZÁKLADNÉ INFORMÁCIE
+📍 Lokalit ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   500 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">86 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','197119818');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','197119818');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','197119818','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/197111926/na-prenajom-garsonka-ul-pavlovova-poprad.php"><img src="https://www.bazos.sk/img/1t/926/197111926.jpg" class="obrazek" alt="Na PRENÁJOM garsónka, ul. Pavlovova, Poprad" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/197111926/na-prenajom-garsonka-ul-pavlovova-poprad.php">Na PRENÁJOM garsónka, ul. Pavlovova, Poprad</a></span><span class=velikost10> - [2.11. 2026]</span><br>
+<div class=popis>Ponúkam na prenájom zrekonštruovanú garsónku v Poprade, na ul. Pavlovova. Výborná lokalita a dostupnosť.
+
+Dispozícia: vstupná chodba, kúpelňa s WC, kuchyňa spojená so spálňou.
+
+Vybavenie bytu:&nbsp; nová kuchynská linka, sporák.
+
+Byt je voľný ihneď.
+
+Výška nájmu 400 € vrátane energií.
+
+&nbsp;
+V príp ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   400 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">95 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','197111926');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','197111926');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','197111926','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+<div class="inzeraty inzeratyflex">
+<div class="inzeratynadpis"><a href="https://reality.bazos.sk/inzerat/197111900/na-prenajom-1-izbovy-byt-ul-okruzna-poprad.php"><img src="https://www.bazos.sk/img/1t/900/197111900.jpg" class="obrazek" alt="Na PRENÁJOM, 1 izbovy byt, ul. Okružná, Poprad" width="170" height="128"></a>
+<span class=nadpis><a href="https://reality.bazos.sk/inzerat/197111900/na-prenajom-1-izbovy-byt-ul-okruzna-poprad.php">Na PRENÁJOM, 1 izbovy byt, ul. Okružná, Poprad</a></span><span class=velikost10> - [2.11. 2026]</span><br>
+<div class=popis>Ponúkam na prenájom zrekonštruovaný, zariadený 1-izbový byt na Okružnej ulici v Poprade.
+&nbsp;
+Dispozícia: vstupná chodba,&nbsp;kuchyňa, kúpelňa, samostané WC, samostatná spálňa.
+
+Vybavenie bytu: šatníkova skriňa, chladnička s mrazničkou, sporák, barové sedenie, posteľ, skriňa, obývačkova stena.
+
+B ...</div><br><br>
+</div>
+<div class="inzeratycena"><b><span translate="no">   470 €</span></b></div>
+<div class="inzeratylok">Poprad<br>058 01</div>
+<div class="inzeratyview">101 x</div>
+<div class="inzeratyakce">
+<span onclick="odeslatakci('spam','197111900');return false;" class="akce paction">Označiť zlý inzerát</span> <span onclick="odeslatakci('category','197111900');return false;" class="akce paction">Chybnú kategóriu</span> <span onclick="odeslatakci('rating','0','0','Predajca');return false;" class="akce paction">Ohodnotiť užívateľa</span> <span onclick="odeslatakci('edit','197111900','reality');return false;" class="akce paction">Zmazať/Upraviť/Topovať</span>
+</div>
+</div>
+
+
+</div>
+
+
+</div></div><br>
+
+&copy;2026 Bazoš - <b>Inzercia, bazár Byty</b><br>
+<a href="https://www.bazos.sk/pomoc.php">Pomoc</a>, <a href="https://www.bazos.sk/otazky.php">Otázky</a>, <a href="https://www.bazos.sk/hodnotenie.php">Hodnotenie</a>, <a href="https://www.bazos.sk/kontakt.php">Kontakt</a>, <a href="https://www.bazos.sk/reklama.php">Reklama</a>, <a href="https://www.bazos.sk/podmienky.php">Podmienky</a>, <a href="https://www.bazos.sk/ochrana-udajov.php">Ochrana údajov</a>, <a href="https://www.bazos.sk/rss.php?rub=re&cat=152&typ=3">RSS</a>, <form name="formvkm" id="formvkm" method="post" style="display: inline;"><input type="hidden" name="vkm" value="m"><input type="submit" class="vkm" value="Mobilná verzia"></form><br>
+
+Inzeráty Reality celkom: <b>64283</b>, za 24 hodín: <b>6983</b><br><br>
+<a href="https://www.bazos.sk/mapa-kategorie.php">Mapa kategórií</a>, <a href="https://reality.bazos.sk/mapa-search.php">Najvyhľadávanejšie výrazy</a>
+<br>
+Krajiny: <a href="https://reality.bazos.sk">Slovensko</a>, <a href="https://reality.bazos.cz">Česká republika</a>, <a href="https://nieruchomosci.bazos.pl">Poľsko</a>, <a href="https://immobilien.bazos.at">Rakúsko</a>
+<br>
+<br>
+</div>
+
+<script src="https://www.bazos.sk/cookie-consent.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({"notice_banner_type":"simple","consent_type":"express","palette":"light","language":"sk","page_load_consent_levels":["strictly-necessary"],"notice_banner_reject_button_hide":false,"preferences_center_close_button_hide":false,"page_refresh_confirmation_buttons":false,"cookie_domain": "bazos.sk"});
+});
+</script>
+<a href="#" id="open_preferences_center"> </a>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HLZSNE9Z0C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HLZSNE9Z0C');
+</script>
+
+</body>
+</html>
