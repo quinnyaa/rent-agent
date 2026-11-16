@@ -14,12 +14,14 @@ type Json = Record<string, unknown>;
 const clean = (s: string) => s.replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
 const isObj = (v: unknown): v is Json => typeof v === 'object' && v !== null && !Array.isArray(v);
 const obj = (v: unknown): Json => (isObj(v) ? v : {});
-/** Рядок або число як текст; порожнє і службові значення Next («$undefined», «$41») → null. */
+/** Next екранує справжній «$» на початку рядка як «$$»; одинарний «$» — службове значення («$undefined», «$41»). */
+const unescapeDollar = (s: string) => (s.startsWith('$$') ? s.slice(1) : s);
+/** Рядок або число як текст; порожнє і службові значення Next → null. */
 const str = (v: unknown): string | null => {
   if (typeof v === 'number' && Number.isFinite(v)) return String(v);
   if (typeof v !== 'string') return null;
-  const s = clean(v);
-  return s && !s.startsWith('$') ? s : null;
+  if (v.startsWith('$') && !v.startsWith('$$')) return null;
+  return clean(unescapeDollar(v)) || null;
 };
 
 /** Сторінка пошуку: page=1 — без параметра, далі `page=N` (сторінка за останньою віддає 404). */
@@ -147,6 +149,12 @@ function searchDates(html: string): Map<string, string> {
   return dates;
 }
 
+/** Загальна кількість із JSON-LD («1-30 inzerát z 96 v ponuke») або з <title> («(96 inzerátov)»). */
+function searchTotalFallback(html: string): number | null {
+  const m = html.match(/\d+-\d+ inzer[aá]t\S* z (\d+)/) ?? html.match(/<title>[^<]*\((\d+) inzer[aá]t[^)]*\)/);
+  return m ? Number(m[1]) : null;
+}
+
 export function parseSearchPage(html: string): { items: ListingSummary[]; total: number | null } {
   const rows = flightRows(html);
   const dates = searchDates(html);
@@ -155,6 +163,8 @@ export function parseSearchPage(html: string): { items: ListingSummary[]; total:
     const m = row.match(/"totalCount":(\d+),"advertisementsCount":\d+/);
     if (m) total = Number(m[1]);
   }
+  // Запасні місця з тією ж кількістю — щоб перестановка ключів у даних Next не клала весь пошук
+  total ??= searchTotalFallback(html);
 
   const items: ListingSummary[] = [];
   for (const ad of advertisements(rows)) {
@@ -234,6 +244,7 @@ function parameterLines(ad: Json): string[] {
 function descriptionText(raw: unknown, rows: Map<string, string>): string {
   let text = typeof raw === 'string' ? raw : '';
   if (/^\$[0-9a-f]+$/.test(text)) text = rows.get(text.slice(1)) ?? '';
+  else if (text.startsWith('$')) text = text.startsWith('$$') ? text.slice(1) : '';
   return text
     .replace(/<span class="inline-contact"[^>]*>.*?<\/span>\s*<\/span>/g, '[kontakt skrytý]')
     .replace(/<\/?[a-z][^>]*>/gi, '')
@@ -245,10 +256,12 @@ function descriptionText(raw: unknown, rows: Map<string, string>): string {
     .trim();
 }
 
-/** Об'єкт оголошення зі сторінки деталі (той, що має parameters), бажано з потрібним id. */
+/**
+ * Об'єкт оголошення зі сторінки деталі (той, що має parameters) — строго з потрібним id:
+ * на сторінці можуть бути й чужі оголошення, їхні дані під цим id зберігати не можна.
+ */
 function detailAd(rows: Map<string, string>, id: string | null): Json | null {
-  const ads = advertisements(rows).filter((ad) => isObj(ad.parameters));
-  return ads.find((ad) => ad.id === id) ?? ads[0] ?? null;
+  return advertisements(rows).find((ad) => isObj(ad.parameters) && ad.id === id) ?? null;
 }
 
 export function parseDetailPage(html: string, summary: Pick<ListingSummary, 'id' | 'url'>): Listing {

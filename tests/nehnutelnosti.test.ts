@@ -107,6 +107,15 @@ describe('nehnutelnosti: сторінка пошуку', () => {
     expect(parseSearchPage('<html><title>Stránka nebola nájdená</title></html>')).toEqual({ items: [], total: null });
   });
 
+  it('загальна кількість: якщо в даних Next її немає — з JSON-LD або <title>', () => {
+    const cards = flightPage(`1:${JSON.stringify({ advertisementsCount: 1, totalCount: 61, items: [] })}\n`);
+    expect(parseSearchPage(cards).total).toBeNull();
+    expect(parseSearchPage(`<title>Byty v Poprade na prenájom (61 inzerátov) | Nehnutelnosti.sk</title>${cards}`).total).toBe(61);
+    expect(parseSearchPage(`<title>Byty (1 inzerát)</title>${cards}`).total).toBe(1);
+    const ld = { '@graph': [{ '@type': 'SearchResultsPage', description: 'Kompletná ponuka. 31-60 inzerát z 61 v ponuke.' }] };
+    expect(parseSearchPage(`<script type="application/ld+json">${JSON.stringify(ld)}</script>${cards}`).total).toBe(61);
+  });
+
   it('формує URL пагінації, не чіпаючи фільтр користувача', () => {
     expect(searchPageUrl(1, PATH)).toBe(`https://www.nehnutelnosti.sk${PATH}`);
     expect(searchPageUrl(4, PATH)).toBe(`https://www.nehnutelnosti.sk${PATH}&page=4`);
@@ -180,6 +189,17 @@ describe('nehnutelnosti: сторінка оголошення', () => {
 
   it('падає з зрозумілою помилкою, якщо даних оголошення немає', () => {
     expect(() => parseDetailPage('<html></html>', { id: '1', url: 'u' })).toThrow(/дані оголошення/);
+  });
+
+  it('чуже оголошення на сторінці не підставляється замість потрібного', () => {
+    expect(() => parseDetailPage(adPage({ ...AD, id: 'JuOther0001' }), { id: AD.id, url: 'u' })).toThrow(/дані оголошення/);
+  });
+
+  it('«$$» на початку рядка — це справжній «$», а не службове значення', () => {
+    const l = parseDetailPage(adPage({ ...AD, title: '$$ výhodne', description: '$$100 zľava', location: { name: '$undefined' } }), { id: AD.id, url: 'u' });
+    expect(l.title).toBe('$ výhodne');
+    expect(l.description).toMatch(/\n\n\$100 zľava$/);
+    expect(l.location).toBe('');
   });
 
   it('зняте з публікації (isActive: false) → HttpError 410', () => {

@@ -92,6 +92,8 @@ class Runner {
   readonly startedAt = new Date().toISOString();
   /** Оголошення, сторінку яких успішно відкрили в цьому запуску — для топу їх не перевіряємо вдруге. */
   private openedNow = new Set<string>();
+  /** Джерела, пошук яких у цьому запуску вдався: лише про них відомо, чого в пошуку вже немає (для --sync). */
+  private searched = new Set<string>();
 
   /** Усі, хто колись був у топі, разом із щойно сформованим — у meta.top:seen після успішної відправки. */
   private pendingTopSeen: string[] | null = null;
@@ -104,7 +106,10 @@ class Runner {
   /** --sync: записи міста, яких не було в цьому пошуку, перевіряємо по одному; зниклі видаляємо. */
   async sync() {
     if (this.stats.seen === 0) return log('звірка: пошук не вдався — пропускаю, щоб не видалити зайвого');
-    const rows = this.db.notSeenSince(this.startedAt, CITY.name).filter((r) => !this.openedNow.has(`${r.source}:${r.id}`));
+    // Якщо пошук джерела впав, усі його записи виглядають «відсутніми в пошуку» — їх не чіпаємо (і не шлемо сотню запитів)
+    const rows = this.db
+      .notSeenSince(this.startedAt, CITY.name)
+      .filter((r) => this.searched.has(r.source) && !this.openedNow.has(`${r.source}:${r.id}`));
     log(`звірка: у БД ${rows.length} оголошень, яких немає в пошуку — перевіряю сторінки`);
     this.syncResult = await syncGone(rows, {
       isAlive: async (row) => sources.find((s) => s.name === row.source)?.isAlive(row.url) ?? null,
@@ -193,6 +198,7 @@ class Runner {
       return [];
     }
     this.stats.seen += summaries.length;
+    this.searched.add(source.name);
 
     const firstRun = this.db.isEmpty(source.name, CITY.name);
     if (firstRun) log(`${source.name}: перший запуск — обробляю перші ${FIRST_RUN_LIMIT}, решта skipped_initial`);
