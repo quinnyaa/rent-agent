@@ -12,18 +12,19 @@ const short = (message: string) => message.replace(/\s+/g, ' ').trim().slice(0, 
 /**
  * Коротка причина, чому оголошення лишилось необробленим, — для підсумку в Telegram.
  * Однакові причини мають давати однаковий рядок: за ним вони групуються й рахуються.
+ * `site` — назва джерела (для помилок сторінки).
  */
-export function describeProblem(stage: 'сторінка' | 'текст' | 'фото', err: unknown): string {
+export function describeProblem(stage: 'сторінка' | 'текст' | 'фото', err: unknown, site = 'bazos'): string {
   const message = (err as Error)?.message ?? String(err);
 
   if (stage === 'сторінка') {
     if (err instanceof HttpError) {
-      if (err.status === 403 || err.status === 429) return `bazos блокує запити (HTTP ${err.status})`;
-      if (err.status >= 500) return `bazos недоступний (HTTP ${err.status})`;
-      return `bazos: HTTP ${err.status}`;
+      if (err.status === 403 || err.status === 429) return `${site} блокує запити (HTTP ${err.status})`;
+      if (err.status >= 500) return `${site} недоступний (HTTP ${err.status})`;
+      return `${site}: HTTP ${err.status}`;
     }
-    if (err instanceof BlockedError) return 'bazos: адреса поза сайтом або завелика відповідь';
-    if (NETWORK_RE.test(message) || /timeout|aborted/i.test(message)) return 'немає зв’язку з bazos (мережа/тайм-аут)';
+    if (err instanceof BlockedError) return `${site}: адреса поза сайтом або завелика відповідь`;
+    if (NETWORK_RE.test(message) || /timeout|aborted/i.test(message)) return `немає зв’язку з ${site} (мережа/тайм-аут)`;
     return `сторінка не розпарсилась: ${short(message)}`;
   }
 

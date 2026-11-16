@@ -7,6 +7,11 @@ export interface City {
   name: string;
   /** Query-рядок пошуку на reality.bazos.sk (з «?»). */
   bazosQuery: string;
+  /**
+   * Пошук на nehnutelnosti.sk: шлях із query, як в адресному рядку (без `page=`; `order=` не додавати — robots.txt).
+   * Не задано — джерело nehnutelnosti для міста пропускається.
+   */
+  nehnutelnostiPath?: string;
 }
 
 export const CITIES: Record<string, City> = {
@@ -14,6 +19,9 @@ export const CITIES: Record<string, City> = {
     key: 'poprad',
     name: 'Poprad',
     bazosQuery: '?hledat=&hlokalita=05801&humkreis=5&cenaod=&cenado=750&order=',
+    // categories: 11/12/300001 — 1/2/3-кімнатні, 16 apartmány, 17 lofty, 18 mezonety, 200000 domy (docs/source-nehnutelnosti.md)
+    nehnutelnostiPath:
+      '/vysledky/poprad/prenajom?categories=11&categories=12&categories=300001&categories=16&categories=17&categories=18&categories=200000&priceTo=750&priceFrom=300',
   },
   kosice: {
     key: 'kosice',

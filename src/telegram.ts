@@ -256,9 +256,11 @@ const TOP_LEGEND = '♨️ підлогове · 🍽 посудомийка · 
  * Топ у HTML (надсилати з html: true): заголовок — посилання, під ним ціна, меблі, значки наявного і оцінки.
  * seenIds — ключі `source:id` усіх, хто вже колись був у надісланому топі; кого там немає — NEW на початку рядка
  * (лише при першій появі в топі; не задано — без позначок).
+ * opts.site — назва сайту в заголовку (топ окремо для кожного джерела); opts.legend: false — без рядка-легенди
+ * (у другому й наступних топах, щоб не повторювати).
  */
 export const topKey = (row: ListingRow) => `${row.source}:${row.id}`;
-export function formatTop(items: RankedListing[], seenIds?: Set<string>): string {
+export function formatTop(items: RankedListing[], seenIds?: Set<string>, opts: { site?: string; legend?: boolean } = {}): string {
   if (items.length === 0) return '';
   const entries = items.map((item, i) => {
     const { row, text, photo } = item;
@@ -286,5 +288,7 @@ export function formatTop(items: RankedListing[], seenIds?: Set<string>): string
     ].filter(Boolean).join(' · ');
     return `${i + 1}. ${isNew ? '<b>NEW</b> ' : ''}<a href="${escapeHtml(row.url)}">${escapeHtml(title)}</a>\n      ${details}`;
   });
-  return `🏆 <b>Топ-${items.length} зараз</b> (за вимогами і фото, без ціни)\n<i>${TOP_LEGEND}</i>\n\n${entries.join('\n\n')}`;
+  const site = opts.site ? ` · ${escapeHtml(opts.site)}` : '';
+  const legend = opts.legend === false ? '' : `\n<i>${TOP_LEGEND}</i>`;
+  return `🏆 <b>Топ-${items.length} зараз${site}</b> (за вимогами і фото, без ціни)${legend}\n\n${entries.join('\n\n')}`;
 }

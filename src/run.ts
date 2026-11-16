@@ -9,13 +9,14 @@ import { getCity } from './cities.ts';
 import { ClaudeAuthError, ClaudeLimitError, claudeAuthFailed, claudeLimitHit, claudeSucceeded } from './claude.ts';
 import { AUTH_HINT, describeProblem, problemLines } from './problems.ts';
 import { Db, type ListingRow } from './db.ts';
+import { duplicateNote, findTwin, isDuplicateNote, twinOutcome } from './dedup.ts';
 import { envInt, intSetting } from './env.ts';
 import { HttpError } from './http.ts';
 import { acquireLock } from './lock.ts';
 import { downloadPhotos, listPhotos, MAX_PHOTOS, photoDir } from './photos.ts';import { appendShortlist } from './shortlist.ts';
-import { sources } from './sources/index.ts';
+import { sources, sourcesFor } from './sources/index.ts';
 import { syncGone, syncLine, type SyncResult } from './sync.ts';
-import type { ListingSummary, SourceAdapter } from './sources/types.ts';
+import type { Listing, ListingSummary, SourceAdapter } from './sources/types.ts';
 import { buildCaption, ConsoleNotifier, escapeHtml, formatTop, pickPhotos, rankTop, TelegramNotifier, topKey, type Notifier } from './telegram.ts';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
@@ -86,7 +87,7 @@ class Runner {
   /** Підхожі, які не вдалося надіслати в Telegram у цьому запуску. */
   telegramFailed = 0;
   // Підсумок запуску для Telegram
-  outcomes = { processed: 0, priceChanged: 0, matched: 0, rejected: 0, pending: 0, gone: 0, skipped: 0 };
+  outcomes = { processed: 0, priceChanged: 0, matched: 0, rejected: 0, duplicates: 0, pending: 0, gone: 0, skipped: 0 };
 
   readonly startedAt = new Date().toISOString();
   /** Оголошення, сторінку яких успішно відкрили в цьому запуску — для топу їх не перевіряємо вдруге. */
@@ -120,37 +121,46 @@ class Runner {
   }
 
   /**
-   * Топ-N серед підхожих, які зараз є в пошуку. Кожного кандидата перевіряємо, що сторінка ще відкривається;
-   * видалені прибираємо з БД (removeListing) і беремо наступного з рейтингу, поки не набереться N.
+   * Топ-N серед підхожих, які зараз є в пошуку, — окремий для кожного сайту (порядок як у реєстрі джерел).
+   * Кожного кандидата перевіряємо, що сторінка ще відкривається; видалені прибираємо з БД (removeListing)
+   * і беремо наступного з рейтингу, поки не набереться N. Повертає по одному повідомленню на сайт.
    */
-  async topMessage(): Promise<string> {
-    if (this.stats.seen === 0) return ''; // пошук не вдався — не знаємо, що ще актуальне
+  async topMessages(): Promise<string[]> {
+    if (this.stats.seen === 0) return []; // пошук не вдався — не знаємо, що ще актуальне
     const items = this.db.activeMatches(this.startedAt, CITY.name).flatMap((row) => {
       const text = TextResultSchema.safeParse(JSON.parse(row.text_result_json!));
       const photo = PhotoResultSchema.safeParse(JSON.parse(row.photo_result_json!));
       return text.success && photo.success ? [{ row, text: text.data, photo: photo.data }] : [];
     });
-    const top = [];
-    for (const item of rankTop(items, items.length)) {
-      if (top.length >= TOP_N) break;
-      const { row } = item;
-      const source = sources.find((s) => s.name === row.source);
-      // null (не вдалося перевірити) — лишаємо в топі, щоб не викидати через тимчасовий збій
-      const alive = this.openedNow.has(`${row.source}:${row.id}`) || !source || (await source.isAlive(row.url)) !== false;
-      if (alive) {
-        top.push(item);
-      } else {
-        this.removeListing(row.source, row.id);
-        log(`топ: ${row.id} більше не відкривається → видалено з БД, беру наступне`);
-      }
-    }
     // NEW — лише при першій появі в топі: top:seen — усі, хто вже був у надісланому топі
     // (top:last — старий формат, лише попередній топ; беремо як стартовий список). Зберігаємо після успішної відправки.
     const prevRaw = this.db.getMeta('top:seen') ?? this.db.getMeta('top:last');
     const seen = prevRaw ? (JSON.parse(prevRaw) as string[]) : [];
-    const current = top.map((t) => topKey(t.row));
+    const current: string[] = [];
+    const messages: string[] = [];
+    const names = [...new Set([...sources.map((s) => s.name), ...items.map((i) => i.row.source)])];
+    for (const name of names) {
+      const source = sources.find((s) => s.name === name);
+      const own = items.filter((i) => i.row.source === name);
+      const top = [];
+      for (const item of rankTop(own, own.length)) {
+        if (top.length >= TOP_N) break;
+        const { row } = item;
+        // null (не вдалося перевірити) — лишаємо в топі, щоб не викидати через тимчасовий збій
+        const alive = this.openedNow.has(`${row.source}:${row.id}`) || !source || (await source.isAlive(row.url)) !== false;
+        if (alive) {
+          top.push(item);
+        } else {
+          this.removeListing(row.source, row.id);
+          log(`топ ${name}: ${row.id} більше не відкривається → видалено з БД, беру наступне`);
+        }
+      }
+      if (top.length === 0) continue;
+      current.push(...top.map((t) => topKey(t.row)));
+      messages.push(formatTop(top, prevRaw ? new Set(seen) : undefined, { site: name, legend: messages.length === 0 }));
+    }
     this.pendingTopSeen = [...seen.filter((k) => !current.includes(k)), ...current].slice(-TOP_SEEN_MAX);
-    return formatTop(top, prevRaw ? new Set(seen) : undefined);
+    return messages;
   }
 
   async alert(key: string, message: string) {
@@ -248,7 +258,7 @@ class Runner {
         return 'done';
       }
       this.pageErrors++;
-      this.problem(describeProblem('сторінка', err));
+      this.problem(describeProblem('сторінка', err, s.source));
       this.db.setStatus(s.source, s.id, 'pending_analysis', { error: `сторінка: ${(err as Error).message}` });
       say(`→ помилка сторінки: ${(err as Error).message}`);
       return 'done';
@@ -256,6 +266,9 @@ class Runner {
     this.db.saveDetails(listing);
     this.openedNow.add(`${s.source}:${s.id}`);
     say(`сторінку отримано: ${listing.priceText || 'ціна ?'}${priceChange ? ` (ціна змінилась: ${priceChange.from ?? '?'} → ${priceChange.to ?? '?'} €)` : ''}, фото ${listing.photoUrls.length}, текст ${listing.description.length} симв.`);
+
+    // 0. Безсумнівний дублікат з іншого сайту (та сама ціна й текст) — без виклику Claude і без другого повідомлення
+    if (!force && this.duplicate(listing, say)) return 'done';
 
     // 1. Текст
     let text: TextResult;
@@ -296,7 +309,7 @@ class Runner {
       say(`↓ фото: завантажено ${files.length} за ${Math.round((Date.now() - dlStarted) / 1000)} с`);
       if (files.length === 0) {
         this.db.setStatus(s.source, s.id, 'pending_analysis', { error: 'фото не завантажились' });
-        this.problem('фото не завантажились з bazos');
+        this.problem(`фото не завантажились з ${s.source}`);
         say('→ фото не завантажились');
         return 'done';
       }
@@ -320,6 +333,27 @@ class Runner {
     this.stats.matched++;
     await this.deliver(this.db.get(s.source, s.id)!, say);
     return 'done';
+  }
+
+  /**
+   * Якщо в іншому джерелі вже є це саме оголошення з вердиктом — переносить вердикт сюди. true — оброблено як дублікат.
+   * Двійник без вердикту або відхилений за фото → false (аналізуємо як звичайне: краще надіслати двічі, ніж пропустити).
+   */
+  duplicate(listing: Listing, say: (m: string) => void): boolean {
+    if (listing.price === null) return false;
+    const twin = findTwin(listing, this.db.twinCandidates(listing.source, CITY.name, listing.price));
+    const outcome = twin && twinOutcome(twin);
+    if (!twin || !outcome) return false;
+    const note = duplicateNote(twin);
+    if (outcome === 'matched') {
+      this.db.markDuplicateMatch(listing.source, listing.id, twin, note);
+      say(`→ ${note} (${twin.url}): уже підійшло там — окремо не надсилаю`);
+    } else {
+      this.db.saveTextResult(listing.source, listing.id, JSON.parse(twin.text_result_json!));
+      this.db.setStatus(listing.source, listing.id, 'rejected', { reason: `текст: ${note} — ${twin.reject_reason!.replace(/^текст:\s*/, '')}` });
+      say(`→ ${note}: там відхилено за текстом — не аналізую вдруге`);
+    }
+    return true;
   }
 
   claudeFailed(s: ListingSummary, stage: 'текст' | 'фото', err: unknown, say: (m: string) => void): 'done' | 'skipped' {
@@ -377,8 +411,10 @@ class Runner {
     }
     o.processed++;
     if (item.priceChange) o.priceChanged++;
-    const status = this.db.get(item.summary.source, item.summary.id)?.status;
-    if (status === 'matched' || status === 'notified') o.matched++;
+    const row = this.db.get(item.summary.source, item.summary.id);
+    const status = row?.status;
+    if (isDuplicateNote(row?.reject_reason)) o.duplicates++;
+    else if (status === 'matched' || status === 'notified') o.matched++;
     else if (status === 'rejected') o.rejected++;
     else if (!status || status === 'gone') o.gone++; // рядка немає — видалено як зникле
     else o.pending++;
@@ -405,6 +441,7 @@ class Runner {
       `✅ підійшло: ${o.matched}`,
       `❌ не підійшло: ${o.rejected}`,
     ];
+    if (o.duplicates) lines.push(`♻️ дублікати з іншого сайту (не аналізую вдруге): ${o.duplicates}`);
     if (o.pending) lines.push(`⏳ відкладено через помилки: ${o.pending}`, ...problemLines(this.problems));
     if (o.gone) lines.push(`🗑 зникли: ${o.gone}`);
     if (this.syncResult) lines.push(syncLine(this.syncResult, DRY_RUN));
@@ -417,8 +454,10 @@ class Runner {
     if (stuck) lines.push(`🧱 застрягли після ${MAX_ATTEMPTS} невдалих спроб: ${stuck} (причина — у лозі/БД, поле error)`);
     if (left - o.skipped > 0) lines.push(`У черзі ще: ${left - o.skipped}`);
     try {
-      const top = await this.topMessage();
+      // Підсумок + топ першого сайту — одним повідомленням, топ кожного наступного сайту — окремим (ліміт 4096 симв.)
+      const [top, ...moreTops] = await this.topMessages();
       await this.notifier.sendMessage(escapeHtml(lines.join('\n')) + (top ? `\n\n${top}` : ''), { html: true });
+      for (const more of moreTops) await this.notifier.sendMessage(more, { html: true });
       if (top && this.pendingTopSeen && !DRY_RUN) this.db.setMeta('top:seen', JSON.stringify(this.pendingTopSeen));
       log('← Telegram: підсумок запуску надіслано');
     } catch (err) {
@@ -469,7 +508,7 @@ async function main() {
 
     let budget = LIMIT;
     let left = 0;
-    for (const source of sources) {
+    for (const source of sourcesFor(CITY)) {
       const queue = await runner.collect(source);
       const take = queue.slice(0, Math.max(0, budget));
       budget -= take.length;

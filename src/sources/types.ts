@@ -29,6 +29,8 @@ export interface Listing {
 
 export interface SourceAdapter {
   name: string;
+  /** Чи налаштовано це джерело для міста. Якщо методу немає — джерело працює для всіх міст. */
+  supports?(city: City): boolean;
   /** Обходить усі сторінки пошуку для міста, повертає унікальні картки в порядку сайту. */
   fetchSearch(city: City): Promise<ListingSummary[]>;
   /** Кидає HttpError 404/410, якщо оголошення видалене. */
