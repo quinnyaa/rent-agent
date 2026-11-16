@@ -173,6 +173,30 @@ export class Db {
       .run(status, extra.reason ?? null, extra.error ?? null, status === 'pending_analysis' && extra.countAttempt !== false ? 1 : 0, source, id);
   }
 
+  /** Кандидати в двійники з інших джерел: те саме місто й ціна, є текст і остаточний вердикт (src/dedup.ts). */
+  twinCandidates(source: string, city: string, price: number): ListingRow[] {
+    return this.db
+      .prepare(
+        `SELECT * FROM listings WHERE source != ? AND city = ? AND price = ? AND raw_text IS NOT NULL
+           AND status IN ('matched', 'notified', 'rejected') ORDER BY first_seen`,
+      )
+      .all(source, city, price) as unknown as ListingRow[];
+  }
+
+  /**
+   * Дублікат підхожого оголошення з іншого сайту: бере оцінки двійника і стає `notified` без окремого повідомлення.
+   * reject_reason = примітка «дублікат <source>:<id>» (не причина відмови — лише слід, звідки оцінки).
+   */
+  markDuplicateMatch(source: string, id: string, twin: ListingRow, note: string) {
+    this.db
+      .prepare(
+        `UPDATE listings SET status = 'notified', notified_at = ?, price_changed = 0, error = NULL, reject_reason = ?,
+           text_result_json = ?, photo_result_json = ?
+         WHERE source = ? AND id = ?`,
+      )
+      .run(now(), note, twin.text_result_json, twin.photo_result_json, source, id);
+  }
+
   /** Видаляє оголошення з БД (сторінка більше не відкривається). Фото на диску прибирає викликач. */
   remove(source: string, id: string) {
     this.db.prepare(`DELETE FROM listings WHERE source = ? AND id = ?`).run(source, id);

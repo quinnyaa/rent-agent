@@ -1,7 +1,7 @@
 # rent-agent
 
 A personal apartment-hunting agent for Slovakia. Once an hour it checks the rental search on
-[reality.bazos.sk](https://reality.bazos.sk), has Claude read every new listing (text first, then all the photos)
+[reality.bazos.sk](https://reality.bazos.sk) and [nehnutelnosti.sk](https://www.nehnutelnosti.sk), has Claude read every new listing (text first, then all the photos)
 against your own requirements, and sends the ones that fit to Telegram.
 
 - **Runs locally on your Mac.** Scheduled with launchd, with an optional menu-bar icon (SwiftBar).
@@ -15,7 +15,7 @@ against your own requirements, and sends the ones that fit to Telegram.
 > are in Slovak; prompts and criteria are in English. To get messages in another language, see
 > [Make it yours](#make-it-yours).
 
-> **Disclaimer.** This is a personal tool, not affiliated with bazos.sk. It reads public search pages the way a browser
+> **Disclaimer.** This is a personal tool, not affiliated with bazos.sk or nehnutelnosti.sk. It reads public search pages the way a browser
 > would. Use it only for your own apartment search, don't increase the request rate, and respect the site's terms.
 > Everything it collects (database, photos, shortlist) is stored on your machine.
 
@@ -76,7 +76,8 @@ npm run schedule:install   # run automatically every 60 minutes
 
 **About the first run.** A search can return 150+ listings. On the first run only the newest `FIRST_RUN_LIMIT` (40) are
 analyzed; the rest are marked `skipped_initial`, so you are not flooded and your subscription limit is not burned at once.
-From then on only new listings and listings whose price changed are analyzed.
+From then on only new listings and listings whose price changed are analyzed. The limit applies to each site separately
+(a site's first run is the first time it is searched for that city).
 
 ## Configuration (`.env`)
 
@@ -121,6 +122,21 @@ zilina: {
 `hlokalita` is the postal code, `humkreis` the radius in km, `cenaod` / `cenado` the price range. Keep **only** these
 six parameters, in this order — extra ones from the browser URL (`rubriky`, `Submit`, `crp`, `kitx`) break pagination.
 Keep the price cap consistent with `criteria.md`.
+
+**nehnutelnosti.sk (optional, per city).** Open nehnutelnosti.sk, set the city, *Prenájom*, the categories and the price
+range, and copy the path with the query string from the address bar into the same city entry:
+
+```ts
+  nehnutelnostiPath: '/vysledky/zilina/prenajom?categories=11&categories=12&priceTo=700',
+```
+
+Leave out `page=` (the agent adds it) and don't add `order=` (the site's `robots.txt` disallows sorted result pages).
+A city without `nehnutelnostiPath` simply skips this source. The category ids are listed in
+`docs/source-nehnutelnosti.md`. Agencies often post the same flat on both sites. A listing is treated as a duplicate only when it is certain: the
+same price and the same ad text (ignoring whitespace, case and contact details) as a listing from the other site that
+already has a verdict. Such a duplicate is not analyzed or sent again — it inherits the verdict and is marked
+`дублікат <site>:<id>` in `reject_reason`. Anything less certain is analyzed and sent as usual. The top-10 in the run
+summary is built separately for each site.
 
 **Files that stay on your machine** (gitignored): `.env`, `criteria.md`, `shortlist.md`, `data/` (database, photos,
 logs), `.claude/settings.local.json`.
@@ -233,7 +249,7 @@ Listings that no longer open on the site are deleted from the database together 
   pros/cons.
 - **A summary after every run that analyzed something**: how many were analyzed, matched, rejected and postponed, with a
   reason for the postponed ones. If nothing new appeared, a short "no new apartments" note.
-- **Top 10** of the matching apartments that are still online, ranked by fit and photo score. Each candidate is
+- **Top 10 per site** of the matching apartments that are still online, ranked by fit and photo score. Each candidate is
   re-checked before sending; apartments appearing in the top for the first time are marked **NEW**.
 - **Alerts** (at most once per 6 hours per type): the search returned nothing, the parser crashed, several listing pages
   failed to parse, or the Claude CLI login expired (`claude auth login` fixes it).
@@ -246,7 +262,7 @@ Listings that no longer open on the site are deleted from the database together 
 | "🔑" in the menu bar / an auth alert in Telegram | The Claude CLI login expired: run `claude auth login` |
 | Listings stay `pending_analysis` | Usually the subscription limit; they are retried on the next run. The reason is in the Telegram summary and in `data/logs/` |
 | Nothing arrives in Telegram | Check `.env`; try `npm run once -- --dry-run --limit 3` and read the output |
-| The search returns 0 listings / the parser fails | bazos may have changed its markup — see [Development](#development) |
+| The search returns 0 listings / the parser fails | The site (bazos or nehnutelnosti) may have changed its markup — see [Development](#development) |
 | A run seems stuck | The lock is released automatically when the process is dead; manually: `rm data/run.lock` |
 | You changed `criteria.md` and want old listings re-evaluated | Put them back in the queue (below) |
 
@@ -278,11 +294,16 @@ npm run typecheck   # tsc --noEmit
 - `CLAUDE.md` describes the code structure and the invariants that must not be broken (in Ukrainian).
 - **bazos changed its markup:** save fresh HTML into `fixtures/` (replace seller names and phone numbers with
   placeholders first), compare with `docs/source-bazos.md`, fix `src/sources/bazos.ts`, update `tests/bazos.test.ts`.
+- **nehnutelnosti changed its page format:** the adapter reads the JSON embedded in the page (Next.js data and JSON-LD),
+  not the markup — see `docs/source-nehnutelnosti.md`, `src/sources/nehnutelnosti.ts`, `tests/nehnutelnosti.test.ts`.
+  The fixtures are trimmed to that embedded data with seller details replaced by placeholders.
 - **A new listings site:** create `src/sources/<name>.ts` implementing `SourceAdapter` (`src/sources/types.ts`) and
-  register it in `src/sources/index.ts`. All site requests must go through `src/http.ts`.
+  register it in `src/sources/index.ts`. All site requests must go through `src/http.ts`, which only talks to the
+  hosts in `ALLOWED_DOMAINS` — add the new site's page and photo hosts there. If the source is configured per city,
+  implement `supports(city)` so other cities skip it.
 - **Backfill** of newer extracted fields for old listings: `npm run backfill:extras` (`--dry-run`, `--force`).
 
 ## License
 
-[MIT](LICENSE). The HTML files in `fixtures/` are saved pages of reality.bazos.sk used only as parser test data; seller
+[MIT](LICENSE). The HTML files in `fixtures/` are saved pages of reality.bazos.sk and nehnutelnosti.sk used only as parser test data; seller
 contact details in them are replaced with placeholders.

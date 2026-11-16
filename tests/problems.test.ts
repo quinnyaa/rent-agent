@@ -22,6 +22,7 @@ describe('describeProblem', () => {
     expect(d(new HttpError(503, 'u'))).toBe('bazos недоступний (HTTP 503)');
     expect(d(new TypeError('fetch failed'))).toBe('немає зв’язку з bazos (мережа/тайм-аут)');
     expect(d(new Error('не знайдено опис'))).toBe('сторінка не розпарсилась: не знайдено опис');
+    expect(problems.describeProblem('сторінка', new HttpError(503, 'u'), 'nehnutelnosti')).toBe('nehnutelnosti недоступний (HTTP 503)');
   });
 
   it('Claude: ліміт, запуск, тайм-аут, невалідний JSON, перевантаження, інше', () => {

@@ -10,6 +10,7 @@ import { Db, type ListingRow } from '../src/db.ts';
 import type { ListingSummary } from '../src/sources/types.ts';
 import { buildCaption, DISHWASHER_BONUS, formatTop, pickPhotos, rankTop, topScore } from '../src/telegram.ts';
 import { syncGone, syncLine } from '../src/sync.ts';
+import { duplicateNote, findTwin, isDuplicateNote, MIN_FINGERPRINT, textFingerprint, twinOutcome } from '../src/dedup.ts';
 
 const text: TextResult = {
   verdict: 'yes',
@@ -302,5 +303,99 @@ describe('syncGone (звірка --sync)', () => {
     const r = await syncGone(rows, { isAlive, remove: (x) => removed.push(x.id), dryRun: true });
     expect(r.removed).toBe(1);
     expect(removed).toEqual([]);
+  });
+});
+
+describe('дублікати між сайтами', () => {
+  const body = [
+    'Ponúkam Vám NA PRENÁJOM zariadený 2 izbový byt s balkónom (50 + 4m2) v Poprade na ulici Podjavorinskej.',
+    'Byt je po kompletnej rekonštrukcii, rok 2024/25, podlažie 3.p/8, k bytu prislúcha pivnica, voľný ihneď.',
+    'Nájomné 350,- EUR/mesiac, energie 250,- EUR/mesiac, depozit 1200,- EUR. Zmluva minimálne na 1 rok.',
+  ];
+  const bazosText = `${body.join('\n\n')}\n\nViac info: Predajca 0900 000 000, predajca@example.com`;
+  const nehnText = `Parametre:\n- Typ: 2 izbový byt na prenájom\n- Cena: 600 €/mes.\n- Plocha: 54 m²\n\n${body.join('\n')}\nViac info: Predajca [kontakt skrytý], [kontakt skrytý]`;
+  const twin = (over: Partial<ListingRow> = {}): ListingRow => ({
+    ...row, source: 'bazos', id: '197391295', price: 600, raw_text: bazosText, status: 'notified', reject_reason: null,
+    text_result_json: JSON.stringify(text), photo_result_json: JSON.stringify(photo), ...over,
+  });
+  const listing = { source: 'nehnutelnosti', price: 600 as number | null, description: nehnText };
+
+  it('той самий текст (пробіли, контакти, блок параметрів не рахуються) і та сама ціна — дублікат', () => {
+    expect(textFingerprint(nehnText)).toBe(textFingerprint(bazosText));
+    expect(textFingerprint(nehnText).length).toBeGreaterThanOrEqual(MIN_FINGERPRINT);
+    expect(findTwin(listing, [twin()])?.id).toBe('197391295');
+  });
+
+  it('будь-який сумнів — не дублікат', () => {
+    expect(findTwin({ ...listing, price: 620 }, [twin()])).toBeNull(); // інша ціна
+    expect(findTwin({ ...listing, price: null }, [twin({ price: null })])).toBeNull(); // ціни немає
+    expect(findTwin(listing, [twin({ raw_text: bazosText.replace('podlažie 3.p/8', 'podlažie 5.p/8') })])).toBeNull(); // інший поверх
+    expect(findTwin(listing, [twin({ source: 'nehnutelnosti' })])).toBeNull(); // той самий сайт
+    expect(findTwin(listing, [twin({ raw_text: null })])).toBeNull();
+    // короткий текст може збігтися в різних квартир
+    const shortText = 'Prenajmem 2-izbový byt v Poprade. Volať 0900 000 000.';
+    expect(findTwin({ ...listing, description: shortText }, [twin({ raw_text: shortText })])).toBeNull();
+  });
+
+  it('доля дубліката залежить від вердикту двійника', () => {
+    expect(twinOutcome(twin({ status: 'notified' }))).toBe('matched');
+    expect(twinOutcome(twin({ status: 'matched' }))).toBe('matched');
+    expect(twinOutcome(twin({ status: 'rejected', reject_reason: 'текст: немає меблів' }))).toBe('rejected');
+    // фото на іншому сайті можуть бути інші — аналізуємо самі
+    expect(twinOutcome(twin({ status: 'rejected', reject_reason: 'фото 3/10 < 5: темно' }))).toBeNull();
+    expect(twinOutcome(twin({ status: 'rejected', reject_reason: 'немає фото' }))).toBeNull();
+    expect(twinOutcome(twin({ status: 'pending_analysis' }))).toBeNull();
+    expect(twinOutcome(twin({ status: 'skipped_initial', text_result_json: null }))).toBeNull();
+  });
+
+  it('примітка про дублікат відрізняється від звичайної причини відмови', () => {
+    const note = duplicateNote({ source: 'bazos', id: '197391295' });
+    expect(note).toBe('дублікат bazos:197391295');
+    expect(isDuplicateNote(note)).toBe(true);
+    expect(isDuplicateNote(`текст: ${note} — немає меблів`)).toBe(true);
+    expect(isDuplicateNote('текст: схоже на дублікат іншого оголошення')).toBe(false);
+    expect(isDuplicateNote(null)).toBe(false);
+  });
+
+  it('БД: кандидати — інше джерело, те саме місто й ціна, з вердиктом; підхожий дублікат стає notified з оцінками двійника', () => {
+    const db = new Db(':memory:');
+    const s = (source: string, id: string, price: number): ListingSummary => ({
+      source, id, url: `https://x/${id}`, title: 't', price, priceText: `${price} €`, location: '', date: null, isTop: false,
+    });
+    const add = (sm: ListingSummary, status: 'new' | 'notified' | 'rejected', rawText: string | null = bazosText) => {
+      db.insertSummary(sm, 'new', 'Poprad');
+      if (rawText !== null) db.saveDetails({ ...sm, description: rawText, photoUrls: [] });
+      db.saveTextResult(sm.source, sm.id, text);
+      db.savePhotoResult(sm.source, sm.id, photo);
+      db.setStatus(sm.source, sm.id, status);
+    };
+    add(s('bazos', 'a', 600), 'notified');
+    add(s('bazos', 'b', 600), 'new'); // ще без вердикту
+    add(s('bazos', 'c', 650), 'notified'); // інша ціна
+    add(s('nehnutelnosti', 'd', 600), 'notified'); // те саме джерело
+    db.insertSummary(s('nehnutelnosti', 'n', 600), 'new', 'Poprad');
+    const candidates = db.twinCandidates('nehnutelnosti', 'Poprad', 600);
+    expect(candidates.map((c) => c.id)).toEqual(['a']);
+    expect(db.twinCandidates('nehnutelnosti', 'Košice', 600)).toEqual([]);
+
+    db.markDuplicateMatch('nehnutelnosti', 'n', candidates[0], duplicateNote(candidates[0]));
+    const n = db.get('nehnutelnosti', 'n')!;
+    expect(n.status).toBe('notified');
+    expect(n.reject_reason).toBe('дублікат bazos:a');
+    expect(n.text_result_json).toBe(candidates[0].text_result_json);
+    expect(n.photo_result_json).toBe(candidates[0].photo_result_json);
+    expect(db.unsentMatches('Poprad')).toEqual([]); // окремо не надсилається
+    expect(db.activeMatches('2000-01-01', 'Poprad').map((r) => r.id)).toContain('n'); // але є в топі свого сайту
+    db.close();
+  });
+});
+
+describe('топ окремо для кожного сайту', () => {
+  it('назва сайту в заголовку, легенда лише там, де не вимкнена', () => {
+    const first = formatTop([{ row, text, photo }], undefined, { site: 'bazos' });
+    const second = formatTop([{ row: { ...row, source: 'nehnutelnosti' }, text, photo }], undefined, { site: 'nehnutelnosti', legend: false });
+    expect(first).toMatch(/^🏆 <b>Топ-1 зараз · bazos<\/b> \(за вимогами і фото, без ціни\)\n<i>/);
+    expect(second).toMatch(/^🏆 <b>Топ-1 зараз · nehnutelnosti<\/b> \(за вимогами і фото, без ціни\)\n\n1\. /);
+    expect(second).not.toContain('<i>');
   });
 });

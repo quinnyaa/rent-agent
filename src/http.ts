@@ -31,9 +31,10 @@ const HEADERS = { 'User-Agent': USER_AGENT, 'Accept-Language': 'sk,en;q=0.8' };
 
 // Адреси беруться з HTML сайту (посилання, фото, Location) — ходимо лише на сайти джерел і лише по HTTPS.
 // Нове джерело — додати його домен сюди.
-const ALLOWED_DOMAINS = ['bazos.sk'];
+// img.unitedclassifieds.sk — CDN фото nehnutelnosti.sk (лише цей хост, не весь unitedclassifieds.sk)
+const ALLOWED_DOMAINS = ['bazos.sk', 'nehnutelnosti.sk', 'img.unitedclassifieds.sk'];
 const MAX_REDIRECTS = 5;
-// Стеля розміру відповіді: сторінка bazos ~100 КБ, фото — до кількох МБ
+// Стеля розміру відповіді: сторінка bazos ~100 КБ, nehnutelnosti ~0.5–0.8 МБ, фото — до кількох МБ
 const MAX_PAGE_BYTES = 5 * 1024 * 1024;
 const MAX_IMAGE_BYTES = 25 * 1024 * 1024;
 
